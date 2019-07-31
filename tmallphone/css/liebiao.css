@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: #eee;
+}
+header{
+    width: 100%;
+    height: 2rem;
+    background: #ffdc04;
+}
+header .daohang{
+    width: 100%;
+}
+header .daohang ul li{
+    float: left;
+    padding: 0 0.5rem;
+    line-height:1rem;
+}
+header .daohang ul li a{
+    color: rgb(51, 51, 51);
+    font-size: 30px;
+    line-height:30px;
+}
+header .daohang ul li a i{
+    color: red;
+    margin-left: 50%;
+    /*position: absolute;*/
+    transform: translate(50%,0%);
+}
+header .daohang ul li a i .icon-1{
+    width: 20px;
+}
