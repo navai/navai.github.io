@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=11">
+		<meta name="description" content="这是一款 HTML5 开发的 CXK 打篮球小游戏，无聊的时候玩玩吧！">
+		<meta name="keywords" content="CXK,打篮球,游戏,弹球,篮球,HTML5,开源,caixukun,CXK出来打球,你打篮球像CXK">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/style.css?s=2">
+		<title>打篮球 -你打游戏像CXK_篮球打CXK</title>
+		<!--<link rel="stylesheet" href="css/common.css">-->
+		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			// 百度统计代码
+			var _hmt = _hmt || [];
+			(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?5adedb455da362ba577abe2fd8e1095d";
+			  var s = document.getElementsByTagName("script")[0];
+			  s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<h2>庞翠打篮球</h2>
+					<p>点两次开始游戏按钮 ，点击屏幕移动</p>
+					<hr>
+					<center>
+						<p>
+							<div class="input-group">
+								<span class="input-group-addon">难度</span>
+								<select class="form-control" id="ballspeedset">
+									<option value="2">简单难度（Speed 2）</option>
+									<option value="3" selected>普通难度（Speed 3）</option>
+									<option value="5">困难模式（Speed 5）</option>
+									<option value="7">极限模式（Speed 7）</option>
+									<option value="9">非人类（Speed 9）</option>
+								</select>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-danger" onclick="window.startGame()">开始游戏</button>
+									<button type="button" class="btn btn-warning" onclick="window.pauseGame()">暂停游戏</button>
+									<button type="button" class="btn btn-success" onclick="window.nextGame()">下个关卡</button>
+								</div>
+							</div>
+						</p>
+					</center>
+					<center id="cdiv" style="width: 100%;">
+						<p><canvas id="canvas" style="width: 100%;height: 1063px;"></canvas></p>
+					</center>
+					<hr>
+					<h3>游戏说明</h3>
+					<p>点一下开始游戏，出现庞翠，再点一次开始游戏 ，篮球开始抛出</p>
+					<p>点庞翠头像 屏幕 左右移动  抛出篮球</p>
+					<hr>
+				</div>
+			</div>
+		</div>
+	</body>
+	<!-- 图片预缓存 -->
+	<img src="images/ball.png" style="width: 0px;height: 0px;" />
+	<img src="images/ballshadow.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle_1.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle_2.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle2_1.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle2_2.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle3_1.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle3_2.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle4_1.png" style="width: 0px;height: 0px;" />
+	<img src="images/paddle4_2.png" style="width: 0px;height: 0px;" />
+	<!-- 背景音乐（已删除） -->
+	<!-- <audio src="" style="width: 0px;height: 0px;border: 0px;" id="audio" loop="-1"></audio> -->
+	<script src="js/common.js?s=4"></script>
+	<script src="js/scene.js?s=4"></script>
+	<script src="js/skills.js?s=4"></script>
+	<script src="js/game.js?s=4"></script>
+	<script src="js/main.js?s=4"></script>
+	<script>
+		var clientWidth = document.body.clientWidth;
+		var cxk_body = 1;
+		var move_way = 1;
+		canvas.width = canvas.clientWidth;
+		canvas.style.width = canvas.clientWidth + "px";
+		cdiv.style.width = cdiv.clientWidth + "px";
+		canvas.height = canvas.clientWidth / 1000 * 563;
+		canvas.style.height = canvas.clientWidth / 1000 * 563 + "px";
+		cdiv.style.height = cdiv.clientWidth / 1000 * 563 + "px";
+		if(canvas.width < 936) {
+			canvas.width = 936;
+			canvas.height = 936 / 1000 * 563;
+			canvas.setAttribute("style", "");
+			canvas.style.zoom = (cdiv.clientWidth / 936);
+		} else {
+
+		}
+		window.startGame = function() {
+			// $("#audio").attr("src", "media/jntm.m4a");
+			// audio.play();
+			window.cacheBallSpeed = parseInt($("#ballspeedset").val());
+			$("#ballspeedset").attr("disabled", "disabled");
+			_main.start();
+			setInterval(function() {
+				if(cxk_body == 1) {
+					_main.paddle.image.src = "images/paddle2_" + move_way + ".png";
+					cxk_body = 2;
+				} else if(cxk_body == 2) {
+					_main.paddle.image.src = "images/paddle3_" + move_way + ".png";
+					cxk_body = 3;
+				}else if(cxk_body == 4){
+					_main.paddle.image.src = "images/paddle4_" + move_way + ".png";
+					cxk_body = 3;
+				} else {
+					_main.paddle.image.src = "images/paddle_" + move_way + ".png";
+					cxk_body = 1;
+				}
+			}, 150);
+
+			setInterval(function() {
+				_main.ballshadow.y = 545;
+				_main.ballshadow.x = _main.ball.x;
+			}, 10);
+		}
+	</script>
+</html>
