@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>阿贾克斯</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="outter" class="outter">
+    <div style="margin-top:10px"><input type="button" style=" margin-left:10%; background: lightskyblue; font-size: 20px;color: white" value="获取github star api" id="star"/></div>
+</div>
+<script>
+  
+    $("#star").click(
+        function () {
+            $.ajax({
+            url:'https://api.github.com/users/faithxie/starred?page=0&per_page=100',//此处换成你的服务端地址
+            dataType:dataType,//jsonp 实现跨域
+            success:function (data) {
+                console.log(data)
+            },
+            error:function (err) {
+                // alert(err.message)
+                alert(JSON.stringify(err));
+
+            }
+        });
+        }
+    )
+
+</script>
+</body>
+</html>

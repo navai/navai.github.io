@@ -74,6 +74,7 @@
     <div class="row"><label class="contentList">errorAlert:</label><input id="erroralert" title="Input errorAlert" value="error" /></div>
 
     <div style="margin-top:10px"><input type="button" style=" margin-left:10%; background: lightskyblue; font-size: 20px;color: white" value="连接测试" id="bt"/></div>
+    <div style="margin-top:10px"><input type="button" style=" margin-left:10%; background: lightskyblue; font-size: 20px;color: white" value="测试" id="star"/></div>
 </div>
 <script>
     $("#bt").click(
@@ -89,6 +90,22 @@
 
         }
     );
+    $("#star").click(
+        function () {
+            $.ajax({
+            url:'https://api.github.com/users/faithxie/starred?page=0&per_page=100',//此处换成你的服务端地址
+            dataType:dataType,//jsonp 实现跨域
+            success:function (data) {
+                console.log(data)
+            },
+            error:function (err) {
+                // alert(err.message)
+                alert(JSON.stringify(err));
+
+            }
+        });
+        }
+    )
 
     function  ajax(url,type,data,dataType,successAlert,errorAlert) {
 
@@ -105,7 +122,8 @@
             },
             error:function (err) {
                 // alert(err.message)
-                alert(err);
+                alert(JSON.stringify(err));
+
             }
         });
     }
