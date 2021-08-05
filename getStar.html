@@ -1,33 +1,167 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>阿贾克斯</title>
+    <title>star</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap-grid.css"> -->
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+
+<style>
+    .card {
+        margin: 10px;
+    }
+    .projectname {
+        height: 60px;
+        overflow: hidden
+    }
+    .description {
+        height: 50px;
+        overflow: hidden
+    }
+</style>
+
 <body>
+    <div class="container-fluid">
 
-<div id="outter" class="outter">
-    <div style="margin-top:10px"><input type="button" style=" margin-left:10%; background: lightskyblue; font-size: 20px;color: white" value="获取github star api" id="star"/></div>
-</div>
-<script>
-  
-    $("#star").click(
-        function () {
-            $.ajax({
-            url:'https://api.github.com/users/faithxie/starred?page=0&per_page=100',//此处换成你的服务端地址
-            dataType:'json',//jsonp 实现跨域
-            success:function (data) {
-                console.log(data)
-            },
-            error:function (err) {
-                // alert(err.message)
-                alert(JSON.stringify(err));
+        <button onclick="show('alldata')" type="button" class="btn btn-primary">全部 <span class="badge"
+                id='num'></span></button>
+        <button onclick="show('pydata')" type="button" class="btn btn-primary">Python<span
+                class="badge"></span></button>
+        <button onclick="show('phpdata')" type="button" class="btn btn-primary">PhP</button>
+        <button onclick="show('javadata')" type="button" class="btn btn-primary">Java</button>
+        <button onclick="show('vuedata')" type="button" class="btn btn-primary">Vue</button>
+        <button onclick="show('jsdata')" type="button" class="btn btn-primary">JavaScript</button>
+        <button onclick="show('cshapdata')" type="button" class="btn btn-primary">C#</button>
+        <button onclick="show('cplusdata')" type="button" class="btn btn-primary">C++</button>
+        <button onclick="show('otherdata')" type="button" class="btn btn-primary">其他</button>
 
-            }
-        });
+        <button onclick="init()" type="button" class="btn btn-success">刷新</button>
+        <button onclick="getdata(1)" type="button" class="btn btn-warning">更新</button>
+
+        <div id="outter" class="row">
+        </div>
+    </div>
+    <script>
+        let alldata = new Array();
+        let pydata = new Array();
+        let phpdata = new Array();
+        let javadata = new Array();
+        let vuedata = new Array();
+        let cshapdata = new Array();
+        let cplusdata = new Array();
+        let jsdata = new Array();
+        let otherdata = new Array();
+        let num = '';
+
+        $('document').ready(init())
+
+
+        function init() {
+            show('alldata')
         }
-    )
+        function show(type) {
+            data = JSON.parse(localStorage.getItem(type))
+            if (data) {
+                showdata(data)
+            } else {
+                getdata(1)
+            }
+        }
 
-</script>
+        function showdata(data) {
+            let html = ''
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i];
+                name = element['name']
+                description = element['description']
+                html_url = element['html_url']
+                language = element['language']
+                stargazers_count = element['stargazers_count']
+                created_at = element['created_at']
+                pushed_at = element['pushed_at']
+                updated_at = element['updated_at']
+                html +=
+                    "<div class='col-md-2'><div class='card'><div class='card-body'>"
+                    + "<h4 class = 'card-title projectname'>" + name + "</h4>"
+                    + "<p class = 'card-text description'>" + description + " </p>"
+                    + "<a class = 'card-link' href = '#'> " + language + "</a>"
+                    + "<a class = 'card-link' target='_blank'  href = '" + html_url + "'>" + stargazers_count + " </a>"
+                    + "<p  >" + created_at + " </p>"
+                    + "<a  >" + pushed_at + " </a>"
+                    + "</div></div></div>"
+            }
+            num = data.length
+            $('#num').html(num);
+            $('#outter').html(html);
+
+        }
+        function getdata(i) {
+            $.ajax({
+                url: 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100',
+                dataType: 'json',//jsonp 实现跨域
+                success: function (data) {
+                    // console.log(data)
+                    for (let i = 0; i < data.length; i++) {
+                        const element = data[i]['language'];
+                        switch (element) {
+                            case 'PHP':
+                                phpdata.push(data[i]);
+                                break;
+                            case 'Python':
+                                pydata.push(data[i]);
+                                break;
+                            case 'Java':
+                                javadata.push(data[i]);
+                                break;
+                            case 'Vue':
+                                vuedata.push(data[i]);
+                                break;
+                            case 'C#':
+                                cshapdata.push(data[i]);
+                                break;
+                            case 'C++':
+                                cplusdata.push(data[i]);
+                                break;
+                            case 'JavaScript':
+                                jsdata.push(data[i]);
+                                break;
+                            default:
+                                otherdata.push(data[i]);
+                                break;
+                        }
+                    }
+                    alldata = alldata.concat(data)
+                    if (data.length < 100) {
+                        localStorage.setItem("alldata", JSON.stringify(alldata));
+                        localStorage.setItem("phpdata", JSON.stringify(phpdata));
+                        localStorage.setItem("pydata", JSON.stringify(pydata));
+                        localStorage.setItem("javadata", JSON.stringify(javadata));
+                        localStorage.setItem("vuedata", JSON.stringify(vuedata));
+                        localStorage.setItem("cshapdata", JSON.stringify(cshapdata));
+                        localStorage.setItem("cplusdata", JSON.stringify(cplusdata));
+                        localStorage.setItem("jsdata", JSON.stringify(jsdata));
+                        localStorage.setItem("otherdata", JSON.stringify(otherdata));
+                        alert('更新完成')
+                        // return alldata
+                    } else {
+                        getdata(i + 1)
+                    }
+
+                },
+                error: function (err) {
+                    // alert(err.message)
+                    alert(JSON.stringify(err));
+
+                }
+            });
+        }
+
+
+    </script>
 </body>
+
 </html>
