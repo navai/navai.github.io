@@ -14,10 +14,12 @@
     .card {
         margin: 10px;
     }
+
     .projectname {
         height: 60px;
         overflow: hidden
     }
+
     .description {
         height: 50px;
         overflow: hidden
@@ -39,8 +41,11 @@
         <button onclick="show('cplusdata')" type="button" class="btn btn-primary">C++</button>
         <button onclick="show('otherdata')" type="button" class="btn btn-primary">其他</button>
 
-        <button onclick="init()" type="button" class="btn btn-success">刷新</button>
+        <button onclick="show('bigdata')" type="button" class="btn btn-success">大数据</button>
+
+        <button onclick="init()" type="button" class="btn btn-info">刷新</button>
         <button onclick="getdata(1)" type="button" class="btn btn-warning">更新</button>
+        <button onclick="clearStorage()" type="button" class="btn btn-warning">清除</button>
 
         <div id="outter" class="row">
         </div>
@@ -55,6 +60,7 @@
         let cplusdata = new Array();
         let jsdata = new Array();
         let otherdata = new Array();
+        let bigdata = new Array();
         let num = '';
 
         $('document').ready(init())
@@ -68,7 +74,8 @@
             if (data) {
                 showdata(data)
             } else {
-                getdata(1)
+                // getdata(1)
+                alert('没有数据,先更新')
             }
         }
 
@@ -100,6 +107,7 @@
 
         }
         function getdata(i) {
+            localStorage.clear();
             $.ajax({
                 url: 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100',
                 dataType: 'json',//jsonp 实现跨域
@@ -107,6 +115,13 @@
                     // console.log(data)
                     for (let i = 0; i < data.length; i++) {
                         const element = data[i]['language'];
+                        const description = data[i]['description']
+                        // console.log(description);
+                        if (description != null) {
+                            if (description.indexOf("数据") != -1) {
+                                bigdata.push(data[i]);
+                            }
+                        }
                         switch (element) {
                             case 'PHP':
                                 phpdata.push(data[i]);
@@ -137,6 +152,7 @@
                     alldata = alldata.concat(data)
                     if (data.length < 100) {
                         localStorage.setItem("alldata", JSON.stringify(alldata));
+                        localStorage.setItem("bigdata", JSON.stringify(bigdata));
                         localStorage.setItem("phpdata", JSON.stringify(phpdata));
                         localStorage.setItem("pydata", JSON.stringify(pydata));
                         localStorage.setItem("javadata", JSON.stringify(javadata));
@@ -145,6 +161,7 @@
                         localStorage.setItem("cplusdata", JSON.stringify(cplusdata));
                         localStorage.setItem("jsdata", JSON.stringify(jsdata));
                         localStorage.setItem("otherdata", JSON.stringify(otherdata));
+                        
                         alert('更新完成')
                         // return alldata
                     } else {
@@ -158,6 +175,9 @@
 
                 }
             });
+        }
+        function clearStorage() {
+            localStorage.clear();
         }
 
 
