@@ -1225,7 +1225,8 @@
 											<span class="link-title">B站</span>
 										</a>
 										<span class="sub-link">
-											<a href="https://space.bilibili.com/76542346/channel/seriesdetail?sid=467898&ctype=0" target="_blank">java</a> |
+											<a href="https://space.bilibili.com/76542346/channel/seriesdetail?sid=467898&ctype=0"
+												target="_blank">java</a> |
 											<a href="https://space.bilibili.com/328500074/channel/series" target="_blank">会计</a> |
 										</span>
 									</dd>
@@ -1356,6 +1357,13 @@
 										</a>
 										<span class="sub-link">
 											<a href="https://juejin.cn/post/6844904144235413512" target="_blank">基本配置</a>|
+										</span>
+									</dd>
+									<dd class="col-sm-3 col-md-2 col-xs-4 zcool">
+										<a href="https://www.r2coding.com/#/README" target="_blank"><i class="link-logo"></i>
+											<span class="link-title">编程自学路线</span>
+										</a>
+										<span class="sub-link">
 										</span>
 									</dd>
 								</dl>
@@ -1507,8 +1515,10 @@
 										</a>
 									</dd>
 									<dd class="col-sm-3 col-md-2 col-xs-4 behance">
-										<a href="https://www.gaoding.com/koutu" target="_blank" class="fame-bg"><i
-												class="fa fa-angle-right"></i>在线抠图</a>
+										<a href="https://www.gaoding.com/koutu" target="_blank" class="fame-bg">
+											<i class="fa fa-angle-right"></i>
+											在线抠图
+										</a>
 									</dd>
 									<dd class="col-sm-3 col-md-2 col-xs-4 behance">
 										<a href="https://bccto.me/" target="_blank" class="fame-bg"><i
@@ -1529,6 +1539,10 @@
 									<dd class="col-sm-3 col-md-2 col-xs-4 behance">
 										<a href="https://liyasthomas.github.io/postwoman" target="_blank" class="fame-bg"><i
 												class="fa fa-angle-right"></i>postwoman</a>
+									</dd>
+									<dd class="col-sm-3 col-md-2 col-xs-4 behance">
+										<a href="https://www.officeplus.cn/" target="_blank" class="fame-bg"><i
+												class="fa fa-angle-right"></i>PPT官方模板</a>
 									</dd>
 								</dl>
 
@@ -4250,16 +4264,16 @@
 				<!-- test  script -->
 				<script>
 					let events = [];
-					function startRecord() {
+					function startRecord () {
 						rrweb.record({
-							emit(event) {
+							emit (event) {
 								console.log(event);
 								// 将 event 存入 events 数组中
 								events.push(event);
 							},
 						});
 						// save 函数用于将 events 发送至后端存入，并重置 events 数组
-						function save() {
+						function save () {
 							const body = JSON.stringify({ events });
 							events = [];
 							// fetch('http://YOUR_BACKEND_API', {
@@ -4273,11 +4287,11 @@
 						// 每 10 秒调用一次 save 方法，避免请求过多
 						//setInterval(save, 10 * 1000);
 					}
-					function playRecord() {
+					function playRecord () {
 						const replayer = new rrweb.Replayer(events);
 						replayer.play();
 					}
-					function clearRecord() {
+					function clearRecord () {
 						events = [];
 					}
 				</script>
