@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>导航</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+  <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>  
+ 
+</head>
+<body onload="initial()">
+    <div class="d-flex flex-column mian">
+        <div class="container-fluid  flex-grow-1 text-white body">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6 justify-content-center d-flex name">
+                            <img class="img-fluid" src="picture/logo.png" alt="Chania">
+                        </div>
+                        <div class="col-lg-3 d-flex justify-content-end text-white"> 
+                            <div class="d-flex flex-column justify-content-center" style="height: 100%;">
+                                <div class="d-flex" style="width: 160px;">
+                                    <div class=" text-end" id="temperature" style="font-size: 40px;"></div> 
+                                    <div  style="margin-top: 5px;margin-left: 10px;">
+                                        <div id="city"></div>                                
+                                        <div id="weather"></div> 
+                                    </div>
+                                </div>
+                                <div id="time" style="width: 160px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <!-- 第一行 -->
+                    <div class="row">
+                        <div class="col-xxl-6  interval-f">
+                            <div class="row">
+                                <div class="col-lg-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-1 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.11.142:8080')},1000)">
+                                        <div class="navigate-img-1 navigate-size-1  mx-auto "></div>
+                                        <div class="text-center">泰山热力 NC Cloud大型企业数据化平台</div>     
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-2 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.6/')},1000)">
+                                        <div class="navigate-img-2 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">泰安热力网站</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-3 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.6:8081/oa/')},1000)">
+                                        <div class="navigate-img-3 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">泰山热力内网OA</div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 ">
+                            <div class="row">
+                                <div class="col-lg-4  interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-4 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.134:8080/login.html')},1000)">
+                                        <div class="navigate-img-4 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">智能热力系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-5 transit"
+                                    onClick="setTimeout(function(){window.open('https://192.168.10.36/login')},1000)">
+                                        <div class="navigate-img-5 navigate-size-2 mx-auto"></div>
+                                        <div class="text-center">云环境</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-6 transit"
+                                    onClick="setTimeout(function(){window.open('https://192.168.11.140:4430')},1000)">
+                                        <div class="navigate-img-6 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">Songfor SSL VPN</div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 第二行 -->
+                    <div class="row">
+                        <div class="col-xxl-6  interval-f">
+                            <div class="row">
+                                <div class="col-lg-5  interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-7 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.148:8888/index.html')},1000)">
+                                        <div class="navigate-img-7 navigate-size-1  mx-auto "></div>
+                                        <div class="text-center">智能热网管控一体化平台</div>     
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-9 transit"
+                                    onClick="setTimeout(function(){window.open('http://172.16.11.201:8090/hmt/')},1000)">
+                                        <div class="navigate-img-9 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">捷能-热计量系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-8 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.11.104:8686/')},1000)">
+                                        <div class="navigate-img-8 navigate-size-1 mx-auto "></div>
+                                        <div class="text-center">智慧综合能源系统云平台</div>     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6">
+                            <div class="row">
+                                <div class="col-lg-3  interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-10 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.11.110:8888/mdm/login.jsp')},1000)">
+                                        <div class="navigate-img-10 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">主数据系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-11 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.239:8080/portal/')},1000)">
+                                        <div class="navigate-img-11 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">泰山热力经营收费系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-12 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.11.110:8888/esb/login.jsp')},1000)">
+                                        <div class="navigate-img-12 navigate-size-2 mx-auto"></div>
+                                        <div class="text-center">ESB企业服务总线系统</div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- 第三行 -->
+                    <div class="row">
+                        <div class="col-xxl-6  interval-f">
+                            <div class="row">
+                                <div class="col-lg-4  interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-13 transit"
+                                    onClick="setTimeout(function(){window.open('https://192.168.11.138/ui/login.php')},1000)">
+                                        <div class="navigate-img-13 navigate-size-1 mx-auto "></div>
+                                        <div class="text-center">EDR终极监测响应平台</div>     
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box navigate-bg-14 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.151:6789/')},1000)">
+                                        <div class="navigate-img-14 navigate-size-1 mx-auto "></div>
+                                        <div class="text-center">力创--计量与温控一体化系统</div>     
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-17 transit"
+                                    onClick="setTimeout(function(){window.open('http://172.16.11.212:5008/basloginuser')},1000)">
+                                        <div class="navigate-img-17 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">海威茨质控采集平台</div>    
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 ">
+                            <div class="row">
+                                <div class="col-lg-5  interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-16 transit"
+                                    onClick="setTimeout(function(){window.open('http://192.168.10.188:6060/system/login.em')},1000)">
+                                        <div class="navigate-img-16 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">琅卡博-供热节能信息管理系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-15 transit"
+                                    onClick="setTimeout(function(){window.open('http://39.103.236.120:8000/login.aspx')},1000)">
+                                        <div class="navigate-img-15 mx-auto"></div>
+                                        <div class="text-center">智慧巡查信息管理系统</div>    
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-sm-6 interval">
+                                    <div class="pt-4 pb-4  navigate-box mx-auto navigate-bg-18 transit"
+                                    onClick="setTimeout(function(){window.open('http://172.16.11.211:8000/')},1000)">
+                                        <div class="navigate-img-18 navigate-size-1 mx-auto"></div>
+                                        <div class="text-center">德尔-热计量平台</div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 holde"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function initial(){
+        var city = returnCitySN.cname.split("省")[1];
+        startTime();
+        getCurrentPosition(city)
+    };
+    function startTime(){
+        var timestamp = Date.parse(new Date());
+        var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1):date.getMonth()+1) + '-';
+        var D = (date.getDate()< 10 ? '0'+date.getDate():date.getDate())+ ' ';
+
+        var h = (date.getHours() < 10 ? '0'+date.getHours():date.getHours())+ ':';
+        var m = (date.getMinutes() < 10 ? '0'+date.getMinutes():date.getMinutes()) + ':';
+        var s = date.getSeconds() < 10 ? '0'+date.getSeconds():date.getSeconds();
+        strDate=Y+M+D+""+h+m+s;
+        document.getElementById('time').innerHTML=strDate;
+        t=setTimeout('startTime()',500)
+    };
+    function getCurrentPosition(citys) {
+        var city = citys ? citys : '泰安市'
+        $.get("https://restapi.amap.com/v3/weather/weatherInfo?city="+city+"&key=50cc25b3ccb1777d6bf733c7bef94ff2",function(data,status){
+            var city = data.lives[0].city;
+            var weather = data.lives[0].weather;
+            var temperature = data.lives[0].temperature;
+            document.getElementById('city').innerHTML=city;
+            document.getElementById('weather').innerHTML=weather;
+            document.getElementById('temperature').innerHTML=temperature+"℃";
+		});
+        setTimeout('getCurrentPosition()',10800000)
+    };
+
+</script>
+
+<style>
+@keyframes tada {
+    from {
+        transform: scale3d(1, 1, 1)
+    }
+    10%, 20% {
+        transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg)
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)
+    }
+    40%, 60%, 80% {
+        transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg)
+    }
+    to {
+        transform: scale3d(1, 1, 1)
+    }
+}
+.mian{
+    height: 100vh;
+}
+.interval{
+    padding: 0 10px 10px 0;
+}
+ 
+.body{
+    background-image: url(picture/bg.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.name{
+   margin: 90px 0;  
+}
+.navigate-box{
+    width: 100%;
+}
+.holde{
+    height:100px ;
+}
+.transit{
+    transition-property:all;
+	transition-duration:0.2s;
+	transition-timing-function:linear;
+	transition-delay:0s;
+	/* Safari */
+	-webkit-transition-property:all;
+	-webkit-transition-duration:0.2s;
+	-webkit-transition-timing-function:linear;
+	-webkit-transition-delay:0s; 
+}
+
+.navigate-bg-1{
+    background-image: linear-gradient(to right, #3badfc , #3cadfc);
+    animation: tada 0s;
+}
+.navigate-bg-1:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-1:active{
+    animation: none;
+    background-image: linear-gradient(to right, #3badfc , #3cadfc);
+}
+.navigate-bg-2{
+    background-image: linear-gradient(to right, #2ca7cb , #4dd2f0);
+    animation: tada 0s;
+}
+.navigate-bg-2:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-2:active{
+    animation: none;
+    background-image: linear-gradient(to right, #2ca7cb , #4dd2f0);
+}
+.navigate-bg-3{
+    background-image: linear-gradient(to right, #477fea , #67a5f5);
+    animation: tada 0s;
+}
+.navigate-bg-3:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-3:active{
+    animation: none;
+    background-image: linear-gradient(to right, #477fea , #67a5f5);
+}
+.navigate-bg-4{
+    background-image: linear-gradient(to right, #187cf0 , #187cf0);
+    animation: tada 0s;
+}
+.navigate-bg-4:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-4:active{
+    animation: none;
+    background-image: linear-gradient(to right, #187cf0 , #187cf0);
+}
+.navigate-bg-5{
+    background-image: linear-gradient(to right, #2464fc , #2565fc);
+    animation: tada 0s;
+}
+.navigate-bg-5:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-5:active{
+    animation: none;
+    background-image: linear-gradient(to right, #2464fc , #2565fc);
+}
+.navigate-bg-6{
+    background-image: linear-gradient(to right, #7c5df8 , #7c5df8);
+    animation: tada 0s;
+}
+.navigate-bg-6:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-6:active{
+    animation: none;
+    background-image: linear-gradient(to right, #7c5df8 , #7c5df8);
+}
+.navigate-bg-7{
+    background-image: linear-gradient(to right, #3a50f3 , #3b51f3);
+    animation: tada 0s;
+}
+.navigate-bg-7:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-7:active{
+    animation: none;
+    background-image: linear-gradient(to right, #3a50f3 , #3b51f3);
+}
+.navigate-bg-8{
+    background-image: linear-gradient(to right, #563bca , #7e61f5);
+    animation: tada 0s;
+}
+.navigate-bg-8:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-8:active{
+    animation: none;
+    background-image: linear-gradient(to right, #563bca , #7e61f5);
+}
+.navigate-bg-9{
+    background-image: linear-gradient(to right, #359d52 , #3fc45c);
+    animation: tada 0s;
+}
+.navigate-bg-9:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-9:active{
+    animation: none;
+    background-image: linear-gradient(to right, #359d52 , #3fc45c);
+}
+.navigate-bg-10{
+    background-image: linear-gradient(to right, #2f4ecb , #3c71f1);
+    animation: tada 0s;
+}
+.navigate-bg-10:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-10:active{
+    animation: none;
+    background-image: linear-gradient(to right, #2f4ecb , #3c71f1);
+}
+.navigate-bg-11{
+    background-image: linear-gradient(to right, #38a8cb , #55d3f0);
+    animation: tada 0s;
+}
+.navigate-bg-11:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-11:active{
+    animation: none;
+    background-image: linear-gradient(to right, #38a8cb , #55d3f0);
+}
+.navigate-bg-12{
+    background-image: linear-gradient(to right, #1e42c8 , #2c69f8);
+    animation: tada 0s;
+}
+.navigate-bg-12:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-12:active{
+    animation: none;
+    background-image: linear-gradient(to right, #1e42c8 , #2c69f8);
+}
+.navigate-bg-13{
+    background-image: linear-gradient(to right, #269045 , #2cc14d);
+    animation: tada 0s;
+}
+.navigate-bg-13:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-13:active{
+    animation: none;
+    background-image: linear-gradient(to right, #269045 , #2cc14d);
+}
+.navigate-bg-14{
+    background-image: linear-gradient(to right, #40bfe0 , #40bfe0);
+    animation: tada 0s;
+}
+.navigate-bg-14:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-14:active{
+    animation: none;
+    background-image: linear-gradient(to right, #40bfe0 , #40bfe0);
+}
+.navigate-bg-15{
+    background-image: linear-gradient(to right, #3c51f3 , #3b51f3);
+    animation: tada 0s;
+}
+.navigate-bg-15:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-15:active{
+    animation: none;
+    background-image: linear-gradient(to right, #3c51f3 , #3b51f3);
+}
+.navigate-bg-16{
+    background-image: linear-gradient(to right, #278e46 , #2cc24e);
+    animation: tada 0s;
+}
+.navigate-bg-16:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-16:active{
+    animation: none;
+    background-image: linear-gradient(to right, #278e46 , #2cc24e);
+}
+.navigate-bg-17{
+    background-image: linear-gradient(to right, #67a9ff , #70baff);
+    animation: tada 0s;
+}
+.navigate-bg-17:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-17:active{
+    animation: none;
+    background-image: linear-gradient(to right, #67a9ff , #70baff);
+}
+.navigate-bg-18{
+    background-image: linear-gradient(to right, #258c44 , #2bbc4c);
+    animation: tada 0s;
+}
+.navigate-bg-18:hover{
+    background-image: linear-gradient(to right, #2cc9fd , #51e0ff);
+    margin-top: -10px;
+    animation-duration: 1s;
+}
+.navigate-bg-18:active{
+    animation: none;
+    background-image: linear-gradient(to right, #258c44 , #2bbc4c);
+}
+
+.navigate-size-1{
+    height: 110px;width: 110px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.navigate-size-2{
+    height: 110px;width: 150px;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.navigate-img-1{
+    background-image: url(picture/logo-1.png);
+    /* background-image: radial-gradient(circle, rgba(255,255,255,1), rgba(112,86,220,1)); */
+}
+.navigate-img-2{
+    background-image: url(picture/logo-2.png);
+}
+.navigate-img-3{
+    background-image: url(picture/logo-3.png);
+}
+.navigate-img-4{
+    background-image: url(picture/logo-4.png);
+}
+.navigate-img-5{
+    background-image: url(picture/logo-5.png);
+}
+.navigate-img-6{
+    background-image: url(picture/logo-6.png);
+}
+.navigate-img-7{
+    background-image: url(picture/logo-7.png);
+}
+.navigate-img-8{
+    background-image: url(picture/logo-8.png);
+}
+.navigate-img-9{
+    background-image: url(picture/logo-9.png);
+}
+.navigate-img-10{
+    background-image: url(picture/logo-10.png);
+}
+.navigate-img-11{
+    background-image: url(picture/logo-11.png);
+}
+.navigate-img-12{
+    background-image: url(picture/logo-12.png);
+}
+.navigate-img-13{
+    background-image: url(picture/logo-13.png);
+}
+.navigate-img-14{
+    background-image: url(picture/logo-14.png);
+}
+.navigate-img-15{
+    height: 110px;width: 160px;
+    background-image: url(picture/logo-15.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.navigate-img-16{
+    background-image: url(picture/logo-16.png);
+}
+.navigate-img-17{
+    background-image: url(picture/logo-17.png);
+}
+.navigate-img-18{
+    background-image: url(picture/logo-18.png);
+}
+.interval-f{
+    padding-right:10px;
+}
+</style>
+
+</html>
