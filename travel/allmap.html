@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body,
+		html {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+
+		#allmap {
+			width: 100%;
+			height: 90%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+	</style>
+
+	<script type="text/javascript"
+		src="http://api.map.baidu.com/api?v=2.0&ak=j3ZwPIIaaFucQcYhP0C0fxUsTTBZvuoH"></script>
+	<title>位置</title>
+</head>
+
+<body>
+	<div id="allmap"></div>
+	<div>
+		<!-- https://api.map.baidu.com/lbsapi/getpoint/index.html  地图坐标拾取 -->
+		<!-- <a class="sel_btn" href="https://uri.amap.com/marker?position={$long},{$lat}&name=临朐泰邦单采血浆站">高德地图</a>
+		<a  class="sel_btn" href="http://api.map.baidu.com/marker?location={$lat},{$long}&title=临朐泰邦单采血浆站&content=&output=html">百度地图</a> -->
+		<button class="sel_btn" onclick="nav()">导航</button>
+
+	</div>
+</body>
+
+<script src='jquery.min.js' charset='utf-8'></script>
+
+</html>
+<style type="text/css">
+	.sel_btn {
+		height: 35px;
+		margin-left: 10px;
+		background: #02bafa;
+		border: 1px #26bbdb solid;
+		border-radius: 3px;
+		/*color: #fff;*/
+		display: inline-block;
+		text-decoration: none;
+		font-size: 25px;
+		width: 90%;
+		outline: none;
+		color: #fff;
+		text-align: center;
+	}
+</style>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	//地图中心点
+	var point = new BMap.Point(115.823053,36.126591);
+	map.centerAndZoom(point, 8);
+	map.addControl(new BMap.NavigationControl());
+
+	var convertor = new BMap.Convertor();
+	var pointArr = [];
+	pointArr.push(point);
+	convertor.translate(pointArr, 1, 5, translateCallback);
+
+	function translateCallback(data) {
+		// alert(data);
+	}
+
+	map.addOverlay(label);
+	map.enableScrollWheelZoom(true);
+
+
+
+	var myIcon = new BMap.Icon("icon/dizhi.png", new BMap.Size(30, 30));
+	var foot = new BMap.Icon("icon/foot.png", new BMap.Size(30, 30));
+	var style = {
+		color: "red",
+		fontSize: "12px",
+		height: "20px",
+		lineHeight: "20px",
+		fontFamily: "微软雅黑"
+	}
+
+	var busstyle = {
+		color: "black",
+		fontSize: "12px",
+		height: "20px",
+		lineHeight: "20px",
+		fontFamily: "微软雅黑"
+	}
+
+	//地点
+	/**
+	 * 南京
+	*/
+	var point = new BMap.Point(118.79543, 32.026944);
+	var pt = new BMap.Point(118.79543, 32.026944);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("夫子庙", opts);  // 创建文本标注对象
+	label.setStyle({
+		color: "red",
+		fontSize: "12px",
+		height: "20px",
+		lineHeight: "20px",
+		fontFamily: "微软雅黑"
+	});
+	map.addOverlay(label);
+
+	var point = new BMap.Point(118.859755, 32.06641);
+	var pt = new BMap.Point(118.859755, 32.06641);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("中山陵", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	//
+	var point = new BMap.Point(118.79601, 32.024914);
+	var pt = new BMap.Point(118.79601, 32.024914);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("乌衣巷", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	//
+	var point = new BMap.Point(118.791517, 32.027335);
+	var pt = new BMap.Point(118.791517, 32.027335);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("瞻园", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	//
+	var point = new BMap.Point(118.83165, 32.046772);
+	var pt = new BMap.Point(118.83165, 32.046772);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("博物院", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	//
+	var point = new BMap.Point(118.805928, 32.049002);
+	var pt = new BMap.Point(118.805928, 32.049002);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("六朝博物院", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	//
+	var point = new BMap.Point(118.801861, 32.067125);
+	var pt = new BMap.Point(118.801861, 32.067125);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("鸡鸣寺", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	//
+	var point = new BMap.Point(118.803714, 32.093502);
+	var pt = new BMap.Point(118.803714, 32.093502);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("南京站", opts);  // 创建文本标注对象
+	label.setStyle(busstyle);
+	map.addOverlay(label);
+
+	//
+	var point = new BMap.Point(118.804341, 31.975024);
+	var pt = new BMap.Point(118.804341, 31.975024);
+	var marker2 = new BMap.Marker(pt, { icon: foot });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("南京南站", opts);  // 创建文本标注对象
+	label.setStyle(busstyle);
+	map.addOverlay(label);
+
+
+
+</script>
+
+<script>
+	/**
+	 * 连云港
+	*/
+
+	var point = new BMap.Point(119.46446, 34.771368);
+	var pt = new BMap.Point(119.46446, 34.771368);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("连岛", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.376731, 34.764874);
+	var pt = new BMap.Point(119.376731, 34.764874);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("在海一方", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.378724, 34.750705);
+	var pt = new BMap.Point(119.378724, 34.750705);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("墟沟美食城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.180997, 34.611119);
+	var pt = new BMap.Point(119.180997, 34.611119);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("民主路文化街", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.288618, 34.650836);
+	var pt = new BMap.Point(119.288618, 34.650836);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("花果山", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.365109, 34.738442);
+	var pt = new BMap.Point(119.365109, 34.738442);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("鑫盛宾馆", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 杭州
+	*/
+
+	var point = new BMap.Point(120.12792, 30.228932);
+	var pt = new BMap.Point(120.12792, 30.228932);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("西湖", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(120.18809, 30.22259);
+	var pt = new BMap.Point(120.18809, 30.22259);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("钱塘江", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(120.187097, 30.328188);
+	var pt = new BMap.Point(120.187097, 30.328188);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("新天地", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 上海
+	*/
+
+	var point = new BMap.Point(121.496389, 31.189351);
+	var pt = new BMap.Point(121.496389, 31.189351);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("世博展览馆", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(121.497204, 31.243453);
+	var pt = new BMap.Point(121.497204, 31.243453);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("外滩", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(121.361199, 31.158938);
+	var pt = new BMap.Point(121.361199, 31.158938);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("七宝古镇", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(121.482126, 31.23419);
+	var pt = new BMap.Point(121.482126, 31.23419);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("上海博物馆", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 兰州
+	*/
+	var point = new BMap.Point(103.8234, 36.071919);
+	var pt = new BMap.Point(103.8234, 36.071919);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("中山桥", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 西安
+	*/
+	var point = new BMap.Point(108.950137, 34.266827);
+	var pt = new BMap.Point(108.950137, 34.266827);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("回民街", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(108.970604, 34.224485);
+	var pt = new BMap.Point(108.970604, 34.224485);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("大雁塔", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+</script>
+
+<script>
+	/**
+	 * 大同
+	*/
+	var point = new BMap.Point(113.721979, 39.666616);
+	var pt = new BMap.Point(113.721979, 39.666616);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("悬空寺", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(113.297526, 40.074002);
+	var pt = new BMap.Point(113.297526, 40.074002);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("王府至尊酒店", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(113.308727, 40.099553);
+	var pt = new BMap.Point(113.308727, 40.099553);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("大同古城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 青海
+	*/
+	var point = new BMap.Point(101.820953, 36.626629);
+	var pt = new BMap.Point(101.820953, 36.626629);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("西宁", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 西藏
+	*/
+	var point = new BMap.Point(91.125038, 29.660346);
+	var pt = new BMap.Point(91.125038, 29.660346);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("布达拉宫", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(91.136269, 29.65592);
+	var pt = new BMap.Point(91.136269, 29.65592);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("八郭街", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 北京
+	*/
+
+	var point = new BMap.Point(116.316833, 39.998877);
+	var pt = new BMap.Point(116.316833, 39.998877);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("北大", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.280661, 39.913834);
+	var pt = new BMap.Point(116.280661, 39.913834);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("五棵松", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.403049, 39.999352);
+	var pt = new BMap.Point(116.403049, 39.999352);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("鸟巢", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+
+<script>
+	/**
+	 * 贵州
+	 * 黄平 
+	 * 紫云
+	 * 普定
+	*/
+
+	var point = new BMap.Point(106.678823, 26.450442);
+	var pt = new BMap.Point(106.678823, 26.450442);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("贵州花溪", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(107.90496, 26.898666);
+	var pt = new BMap.Point(107.90496, 26.898666);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("黄平", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(106.088461, 25.798555);
+	var pt = new BMap.Point(106.088461, 25.798555);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("紫云", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(105.758083, 26.317386);
+	var pt = new BMap.Point(105.758083, 26.317386);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("普定", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+</script>
+
+<script>
+	/**
+	 * 广西
+	 * 环江 
+	 * 防城
+	*/
+	var point = new BMap.Point(108.374907, 21.780095);
+	var pt = new BMap.Point(108.374907, 21.780095);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("防城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(108.250299, 24.848464);
+	var pt = new BMap.Point(108.250299, 24.848464);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("环江", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 海南
+	 * 文昌 
+	*/
+	var point = new BMap.Point(110.814671, 19.558801);
+	var pt = new BMap.Point(110.814671, 19.558801);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("文昌", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+</script>
+
+
+<script>
+	/**
+	 * 安徽
+	 * 亳州 
+	*/
+	var point = new BMap.Point(115.786846,33.819978);
+	var pt = new BMap.Point(115.786846,33.819978);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("亳州", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.559928,33.241998);
+	var pt = new BMap.Point(116.559928,33.241998);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("蒙城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+</script>
+
+<script>
+	/**
+	 * 天津
+	 * 
+	*/
+</script>
+
+<script>
+	/**
+	 * 河北
+	 * 沧州
+	 * 兴隆
+	*/
+	var point = new BMap.Point(117.498945, 40.411082);
+	var pt = new BMap.Point(117.498945, 40.411082);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("兴隆", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.819538, 38.305895);
+	var pt = new BMap.Point(116.819538, 38.305895);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("税务", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+<script>
+	/**
+	 * 柬埔寨
+	*/
+
+	var point = new BMap.Point(103.866988, 13.41247);
+	var pt = new BMap.Point(103.866988, 13.41247);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("吴哥窟", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(103.250761, 10.700921);
+	var pt = new BMap.Point(103.250761, 10.700921);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("高龙", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
+
+
+<script>
+	/**
+	 * 山东
+	*/
+
+	var point = new BMap.Point(120.104731, 36.804561);
+	var pt = new BMap.Point(120.104731, 36.804561);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("蓝树谷", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(120.504219, 36.203802);
+	var pt = new BMap.Point(120.504219, 36.203802);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("世园会", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(117.222123, 36.441982);
+	var pt = new BMap.Point(117.222123, 36.441982);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("跑马岭", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(118.366496, 35.955852);
+	var pt = new BMap.Point(118.366496, 35.955852);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("天上王城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(118.592444,36.519639);
+	var pt = new BMap.Point(118.592444,36.519639);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("揽翠湖", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(118.714513,36.207552);
+	var pt = new BMap.Point(118.714513,36.207552);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("沂山", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.287109,37.457549);
+	var pt = new BMap.Point(116.287109,37.457549);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("德州", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.698754,36.812573);
+	var pt = new BMap.Point(116.698754,36.812573);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("齐河", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(117.781758,37.60124);
+	var pt = new BMap.Point(117.781758,37.60124);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("阳信", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.172602,36.746013);
+	var pt = new BMap.Point(119.172602,36.746013);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("歌尔", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.760166,36.356531);
+	var pt = new BMap.Point(119.760166,36.356531);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("高密", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(121.140109,37.593506);
+	var pt = new BMap.Point(121.140109,37.593506);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("富士康", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(122.197261,37.510294);
+	var pt = new BMap.Point(122.197261,37.510294);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("刘公岛", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(119.545959,35.468116);
+	var pt = new BMap.Point(119.545959,35.468116);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("日照", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(118.838047,35.624273);
+	var pt = new BMap.Point(118.838047,35.624273);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("莒县", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(118.661127,35.831838);
+	var pt = new BMap.Point(118.661127,35.831838);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("沂水", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.973441,35.60109);
+	var pt = new BMap.Point(116.973441,35.60109);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("曲师", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(117.470005,35.078152);
+	var pt = new BMap.Point(117.470005,35.078152);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("山亭", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.006847,35.603713);
+	var pt = new BMap.Point(116.006847,35.603713);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("郓城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(115.93806,35.589394);
+	var pt = new BMap.Point(115.93806,35.589394);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("水浒好汉城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(115.93806,35.589394);
+	var pt = new BMap.Point(115.93806,35.589394);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("水浒好汉城", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(116.275615,35.671271);
+	var pt = new BMap.Point(116.275615,35.671271);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("梁山", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.111925,35.794263);
+	var pt = new BMap.Point(116.111925,35.794263);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("水泊梁山", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(115.615512,34.81332);
+	var pt = new BMap.Point(115.615512,34.81332);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("曹县", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+
+	var point = new BMap.Point(115.823053,36.126591);
+	var pt = new BMap.Point(115.823053,36.126591);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("阳谷", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
+	var point = new BMap.Point(115.270651,36.304805);
+	var pt = new BMap.Point(115.270651,36.304805);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("大名", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.026058,36.977671);
+	var pt = new BMap.Point(116.026058,36.977671);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("夏津", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+</script>
