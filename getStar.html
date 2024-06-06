@@ -22,25 +22,34 @@
 
     .description {
         height: 50px;
-        overflow: hidden
+        overflow: hidden;
     }
 </style>
 
 <body>
     <div class="container-fluid">
+        <!-- <button onclick="show('alldata')" type="button" class="btn btn-primary">全部 </button> -->
+        <button onclick="show('Python')" type="button" class="btn btn-primary">Python</button>
+        <button onclick="show('Jupyter Notebook')" type="button" class="btn btn-primary">Jupyter Notebook</button>
+        <button onclick="show('PHP')" type="button" class="btn btn-primary">PhP</button>
+        <button onclick="show('Vue')" type="button" class="btn btn-primary">Vue</button>
+        <button onclick="show('Java')" type="button" class="btn btn-primary">Java</button>
+        <button onclick="show('C')" type="button" class="btn btn-primary">C</button>
+        <button onclick="show('JavaScript')" type="button" class="btn btn-primary">JavaScript</button>
+        <button onclick="show('Shell')" type="button" class="btn btn-primary">Shell</button>
+        <button onclick="show('Go')" type="button" class="btn btn-primary">go</button>
+        <button onclick="show('C#')" type="button" class="btn btn-primary">C#</button>
+        <button onclick="show('C++')" type="button" class="btn btn-primary">C++</button>
+        <button onclick="show('Kotlin')" type="button" class="btn btn-primary">Kotlin</button>
+        <button onclick="show('Lua')" type="button" class="btn btn-primary">Lua</button>
+        <button onclick="show('Swift')" type="button" class="btn btn-primary">Swift</button>
+        <button onclick="show('CSS')" type="button" class="btn btn-primary">CSS</button>
+        <button onclick="show('HTML')" type="button" class="btn btn-primary">HTML</button>
+        <button onclick="show('Dart')" type="button" class="btn btn-primary">Dart</button>
+        <button onclick="show('TypeScript')" type="button" class="btn btn-primary">TypeScript</button>
+        <button onclick="show('Dockerfile')" type="button" class="btn btn-primary">Dockerfile</button>
 
-        <button onclick="show('alldata')" type="button" class="btn btn-primary">全部 <span class="badge"
-                id='num'></span></button>
-        <button onclick="show('pydata')" type="button" class="btn btn-primary">Python<span
-                class="badge"></span></button>
-        <button onclick="show('phpdata')" type="button" class="btn btn-primary">PhP</button>
-        <button onclick="show('javadata')" type="button" class="btn btn-primary">Java</button>
-        <button onclick="show('vuedata')" type="button" class="btn btn-primary">Vue</button>
-        <button onclick="show('jsdata')" type="button" class="btn btn-primary">JavaScript</button>
-        <button onclick="show('cshapdata')" type="button" class="btn btn-primary">C#</button>
-        <button onclick="show('cplusdata')" type="button" class="btn btn-primary">C++</button>
-        <button onclick="show('otherdata')" type="button" class="btn btn-primary">其他</button>
-
+        <button onclick="show('')" type="button" class="btn btn-primary">其他</button>
         <button onclick="show('bigdata')" type="button" class="btn btn-success">大数据</button>
 
         <button onclick="init()" type="button" class="btn btn-info">刷新</button>
@@ -49,37 +58,121 @@
 
         <div id="outter" class="row">
         </div>
+        <div id="num" class="row">
+        </div>
     </div>
     <script>
-        let alldata = new Array();
-        let pydata = new Array();
-        let phpdata = new Array();
-        let javadata = new Array();
-        let vuedata = new Array();
-        let cshapdata = new Array();
-        let cplusdata = new Array();
-        let jsdata = new Array();
-        let otherdata = new Array();
-        let bigdata = new Array();
         let num = '';
-
         $('document').ready(init())
-
-
         function init() {
-            show('alldata')
+            listAllData()
         }
-        function show(type) {
-            data = JSON.parse(localStorage.getItem(type))
-            if (data) {
-                showdata(data)
-            } else {
-                // getdata(1)
-                alert('没有数据,先更新')
-            }
+        function listAllData() {
+            createBD().then(store => {
+                var db = store.transaction.db;
+                var transaction = db.transaction(["customers"], "readonly");
+                var customerStore = transaction.objectStore("customers");
+                var getRequest = customerStore.getAll();
+
+                getRequest.onsuccess = function (event) {
+                    var allData = event.target.result;
+                    console.log('All data in the object store:');
+                    // console.table(allData);
+                    // console.table(allData.length);
+                    if (allData.length == 0) {
+                        getdata(1)
+                    } else {
+                        showdata(allData)
+                    }
+
+                };
+                getRequest.onerror = function (event) {
+                    console.error('Error listing data', event.target.error);
+                };
+            });
+        }
+
+        function createBD() {
+            return new Promise((resolve, reject) => {
+                var request = indexedDB.open("myDatabase", 1);
+                request.onerror = function (event) {
+                    console.error("Database error: " + event.target.errorCode);
+                    reject(event.target.errorCode);
+                };
+                request.onsuccess = function (event) {
+                    var db = event.target.result;
+                    if (!db.objectStoreNames.contains('customers')) {
+                        var objectStore = db.createObjectStore("customers", { keyPath: "id" });
+                    }
+                    var transaction = db.transaction(["customers"], "readwrite");
+                    var store = transaction.objectStore("customers");
+                    transaction.oncomplete = function (event) {
+                        console.log("Transaction completed successfully!");
+                        resolve(store);
+                    };
+                };
+
+                request.onupgradeneeded = function (event) {
+                    var db = event.target.result;
+                    if (!db.objectStoreNames.contains('customers')) {
+                        db.createObjectStore("customers", { keyPath: "id" });
+                    }
+                };
+            });
+        }
+        function getdata(i) {
+            createBD().then(store => {
+                $.ajax({
+                    url: 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100',
+                    dataType: 'json',
+                    success: function (data) {
+                        var db = store.transaction.db;
+                        var transaction = db.transaction(["customers"], "readwrite");
+                        var customerStore = transaction.objectStore("customers");
+                        for (let i = 0; i < data.length; i++) {
+                            var putRequest = customerStore.put(data[i]);
+                            putRequest.onerror = function (event) {
+                                console.error('Error putting data', event.target.error);
+                            };
+                            putRequest.onsuccess = function (event) {
+                                console.log('Data put successfully');
+                            };
+                            // const description = data[i]['description'];
+                            // if (description && description.indexOf("数据") !== -1) {
+                            //     bigdata.push(data[i]);
+                            // }
+                        }
+                        if (data.length < 100) {
+                        } else {
+                            getdata(i + 1);
+                        }
+                    },
+                    error: function (err) {
+                        alert(JSON.stringify(err));
+                    }
+                });
+            });
+        }
+        function clearStorage() {
+            createBD().then(store => {
+                var db = store.transaction.db;
+                var transaction = db.transaction(["customers"], "readwrite");
+                var customerStore = transaction.objectStore("customers");
+
+                var clearRequest = customerStore.clear();
+
+                clearRequest.onerror = function (event) {
+                    console.error('Error clearing data', event.target.error);
+                };
+
+                clearRequest.onsuccess = function (event) {
+                    console.log('Data cleared successfully');
+                };
+            });
         }
 
         function showdata(data) {
+            data = data.reverse()
             let html = ''
             for (let i = 0; i < data.length; i++) {
                 const element = data[i];
@@ -91,12 +184,15 @@
                 created_at = element['created_at']
                 pushed_at = element['pushed_at']
                 updated_at = element['updated_at']
+
+                homepage = element['homepage']
                 html +=
                     "<div class='col-md-2'><div class='card'><div class='card-body'>"
                     + "<h4 class = 'card-title projectname'>" + name + "</h4>"
                     + "<p class = 'card-text description'>" + description + " </p>"
                     + "<a class = 'card-link' href = '#'> " + language + "</a>"
                     + "<a class = 'card-link' target='_blank'  href = '" + html_url + "'>" + stargazers_count + " </a>"
+                    + "<a class = 'card-link' target='_blank'  href = '" + homepage + "'>homepage</a>"
                     + "<p  >" + created_at + " </p>"
                     + "<a  >" + pushed_at + " </a>"
                     + "</div></div></div>"
@@ -104,82 +200,57 @@
             num = data.length
             $('#num').html(num);
             $('#outter').html(html);
-
         }
-        function getdata(i) {
-            localStorage.clear();
-            $.ajax({
-                url: 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100',
-                dataType: 'json',//jsonp 实现跨域
-                success: function (data) {
-                    // console.log(data)
-                    for (let i = 0; i < data.length; i++) {
-                        const element = data[i]['language'];
-                        const description = data[i]['description']
-                        // console.log(description);
-                        if (description != null) {
-                            if (description.indexOf("数据") != -1) {
-                                bigdata.push(data[i]);
+
+        function searchDataByCondition(dbName, objectStoreName, conditionKey, conditionValue) {
+            return new Promise((resolve, reject) => {
+                var request = indexedDB.open(dbName);
+
+                request.onsuccess = function (event) {
+                    var db = event.target.result;
+                    var transaction = db.transaction(objectStoreName, 'readonly');
+                    var objectStore = transaction.objectStore(objectStoreName);
+                    var data = [];
+
+                    var cursorRequest = objectStore.openCursor();
+
+                    cursorRequest.onsuccess = function (event) {
+                        var cursor = event.target.result;
+                        if (cursor) {
+                            if (cursor.value[conditionKey] === conditionValue) {
+                                data.push(cursor.value);
+                            }else{
+                                // console.log('no match');
                             }
+                            cursor.continue();
+                        } else {
+                            resolve(data);
                         }
-                        switch (element) {
-                            case 'PHP':
-                                phpdata.push(data[i]);
-                                break;
-                            case 'Python':
-                                pydata.push(data[i]);
-                                break;
-                            case 'Java':
-                                javadata.push(data[i]);
-                                break;
-                            case 'Vue':
-                                vuedata.push(data[i]);
-                                break;
-                            case 'C#':
-                                cshapdata.push(data[i]);
-                                break;
-                            case 'C++':
-                                cplusdata.push(data[i]);
-                                break;
-                            case 'JavaScript':
-                                jsdata.push(data[i]);
-                                break;
-                            default:
-                                otherdata.push(data[i]);
-                                break;
-                        }
-                    }
-                    alldata = alldata.concat(data)
-                    if (data.length < 100) {
-                        localStorage.setItem("alldata", JSON.stringify(alldata));
-                        localStorage.setItem("bigdata", JSON.stringify(bigdata));
-                        localStorage.setItem("phpdata", JSON.stringify(phpdata));
-                        localStorage.setItem("pydata", JSON.stringify(pydata));
-                        localStorage.setItem("javadata", JSON.stringify(javadata));
-                        localStorage.setItem("vuedata", JSON.stringify(vuedata));
-                        localStorage.setItem("cshapdata", JSON.stringify(cshapdata));
-                        localStorage.setItem("cplusdata", JSON.stringify(cplusdata));
-                        localStorage.setItem("jsdata", JSON.stringify(jsdata));
-                        localStorage.setItem("otherdata", JSON.stringify(otherdata));
-                        
-                        alert('更新完成')
-                        // return alldata
-                    } else {
-                        getdata(i + 1)
-                    }
+                    };
 
-                },
-                error: function (err) {
-                    // alert(err.message)
-                    alert(JSON.stringify(err));
+                    cursorRequest.onerror = function (event) {
+                        reject('Error searching data by condition');
+                    };
+                };
 
-                }
+                request.onerror = function (event) {
+                    reject('Error opening database');
+                };
             });
         }
-        function clearStorage() {
-            localStorage.clear();
+        function show(type) {
+            console.log(type);
+            searchDataByCondition('myDatabase', 'customers', 'language', type)
+                .then(data => {
+                    // data.forEach(item => {
+                    //     console.log(item);
+                    // });
+                    showdata(data)
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
-
 
     </script>
 </body>
