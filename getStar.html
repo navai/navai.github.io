@@ -74,12 +74,8 @@
                 var transaction = db.transaction(["customers"], "readonly");
                 var customerStore = transaction.objectStore("customers");
                 var getRequest = customerStore.getAll();
-
                 getRequest.onsuccess = function (event) {
                     var allData = event.target.result;
-                    console.log('All data in the object store:');
-                    // console.table(allData);
-                    // console.table(allData.length);
                     if (allData.length == 0) {
                         // getdata(1)
                         alert('数据为空,先更新')
@@ -145,6 +141,7 @@
                             // }
                         }
                         if (data.length < 100) {
+                            init()
                         } else {
                             getdata(i + 1);
                         }
@@ -244,9 +241,6 @@
             console.log(type);
             searchDataByCondition('myDatabase', 'customers', 'language', type)
                 .then(data => {
-                    // data.forEach(item => {
-                    //     console.log(item);
-                    // });
                     showdata(data)
                 })
                 .catch(error => {
