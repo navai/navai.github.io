@@ -25,6 +25,7 @@
 
 	<script type="text/javascript"
 		src="https://api.map.baidu.com/api?v=2.0&ak=j3ZwPIIaaFucQcYhP0C0fxUsTTBZvuoH"></script>
+
 	<title>位置</title>
 </head>
 
@@ -34,7 +35,9 @@
 		<!-- https://api.map.baidu.com/lbsapi/getpoint/index.html  地图坐标拾取 -->
 		<!-- <a class="sel_btn" href="https://uri.amap.com/marker?position={$long},{$lat}&name=临朐泰邦单采血浆站">高德地图</a>
 		<a  class="sel_btn" href="http://api.map.baidu.com/marker?location={$lat},{$long}&title=临朐泰邦单采血浆站&content=&output=html">百度地图</a> -->
-		<button class="sel_btn" onclick="nav()">导航</button>
+		<!-- <button class="sel_btn" onclick="nav()">导航</button> -->
+		<a href="./travel/jianpuzhai.html" target="_blank"><i class="link-logo"></i><span class="link-title">柬埔寨路线</span></a>
+		<a href="./travel/roadmap.html" target="_blank"><i class="link-logo"></i><span class="link-title">安徽路线</span></a>
 
 	</div>
 </body>
@@ -63,7 +66,7 @@
 	// 百度地图API功能
 	var map = new BMap.Map("allmap");
 	//地图中心点
-	var point = new BMap.Point(115.823053,36.126591);
+	var point = new BMap.Point(115.823053, 36.126591);
 	map.centerAndZoom(point, 8);
 	map.addControl(new BMap.NavigationControl());
 
@@ -697,8 +700,8 @@
 	 * 安徽
 	 * 亳州 
 	*/
-	var point = new BMap.Point(115.786846,33.819978);
-	var pt = new BMap.Point(115.786846,33.819978);
+	var point = new BMap.Point(115.786846, 33.819978);
+	var pt = new BMap.Point(115.786846, 33.819978);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -709,8 +712,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.559928,33.241998);
-	var pt = new BMap.Point(116.559928,33.241998);
+	var point = new BMap.Point(116.559928, 33.241998);
+	var pt = new BMap.Point(116.559928, 33.241998);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -789,6 +792,33 @@
 	var label = new BMap.Label("高龙", opts);  // 创建文本标注对象
 	label.setStyle(style);
 	map.addOverlay(label);
+
+
+	var point = new BMap.Point(128.946456, 35.17322);
+	var pt = new BMap.Point(128.946456, 35.17322);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("釜山", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(113.314943, 23.397137);
+	var pt = new BMap.Point(113.314943, 23.397137);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("白云机场", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+
 </script>
 
 
@@ -846,8 +876,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(118.592444,36.519639);
-	var pt = new BMap.Point(118.592444,36.519639);
+	var point = new BMap.Point(118.592444, 36.519639);
+	var pt = new BMap.Point(118.592444, 36.519639);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -858,8 +888,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(118.714513,36.207552);
-	var pt = new BMap.Point(118.714513,36.207552);
+	var point = new BMap.Point(118.714513, 36.207552);
+	var pt = new BMap.Point(118.714513, 36.207552);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -870,8 +900,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.287109,37.457549);
-	var pt = new BMap.Point(116.287109,37.457549);
+	var point = new BMap.Point(116.287109, 37.457549);
+	var pt = new BMap.Point(116.287109, 37.457549);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -882,8 +912,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.698754,36.812573);
-	var pt = new BMap.Point(116.698754,36.812573);
+	var point = new BMap.Point(116.698754, 36.812573);
+	var pt = new BMap.Point(116.698754, 36.812573);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -894,8 +924,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(117.781758,37.60124);
-	var pt = new BMap.Point(117.781758,37.60124);
+	var point = new BMap.Point(117.781758, 37.60124);
+	var pt = new BMap.Point(117.781758, 37.60124);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -906,8 +936,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(119.172602,36.746013);
-	var pt = new BMap.Point(119.172602,36.746013);
+	var point = new BMap.Point(119.172602, 36.746013);
+	var pt = new BMap.Point(119.172602, 36.746013);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -918,8 +948,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(119.760166,36.356531);
-	var pt = new BMap.Point(119.760166,36.356531);
+	var point = new BMap.Point(119.760166, 36.356531);
+	var pt = new BMap.Point(119.760166, 36.356531);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -930,8 +960,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(121.140109,37.593506);
-	var pt = new BMap.Point(121.140109,37.593506);
+	var point = new BMap.Point(121.140109, 37.593506);
+	var pt = new BMap.Point(121.140109, 37.593506);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -942,8 +972,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(122.197261,37.510294);
-	var pt = new BMap.Point(122.197261,37.510294);
+	var point = new BMap.Point(122.197261, 37.510294);
+	var pt = new BMap.Point(122.197261, 37.510294);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -954,8 +984,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(119.545959,35.468116);
-	var pt = new BMap.Point(119.545959,35.468116);
+	var point = new BMap.Point(119.545959, 35.468116);
+	var pt = new BMap.Point(119.545959, 35.468116);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -966,8 +996,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(118.838047,35.624273);
-	var pt = new BMap.Point(118.838047,35.624273);
+	var point = new BMap.Point(118.838047, 35.624273);
+	var pt = new BMap.Point(118.838047, 35.624273);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -978,8 +1008,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(118.661127,35.831838);
-	var pt = new BMap.Point(118.661127,35.831838);
+	var point = new BMap.Point(118.661127, 35.831838);
+	var pt = new BMap.Point(118.661127, 35.831838);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -990,8 +1020,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.973441,35.60109);
-	var pt = new BMap.Point(116.973441,35.60109);
+	var point = new BMap.Point(116.973441, 35.60109);
+	var pt = new BMap.Point(116.973441, 35.60109);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1002,8 +1032,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(117.470005,35.078152);
-	var pt = new BMap.Point(117.470005,35.078152);
+	var point = new BMap.Point(117.470005, 35.078152);
+	var pt = new BMap.Point(117.470005, 35.078152);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1014,8 +1044,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.006847,35.603713);
-	var pt = new BMap.Point(116.006847,35.603713);
+	var point = new BMap.Point(116.006847, 35.603713);
+	var pt = new BMap.Point(116.006847, 35.603713);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1026,8 +1056,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(115.93806,35.589394);
-	var pt = new BMap.Point(115.93806,35.589394);
+	var point = new BMap.Point(115.93806, 35.589394);
+	var pt = new BMap.Point(115.93806, 35.589394);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1039,8 +1069,8 @@
 	map.addOverlay(label);
 
 
-	var point = new BMap.Point(115.93806,35.589394);
-	var pt = new BMap.Point(115.93806,35.589394);
+	var point = new BMap.Point(115.93806, 35.589394);
+	var pt = new BMap.Point(115.93806, 35.589394);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1052,8 +1082,8 @@
 	map.addOverlay(label);
 
 
-	var point = new BMap.Point(116.275615,35.671271);
-	var pt = new BMap.Point(116.275615,35.671271);
+	var point = new BMap.Point(116.275615, 35.671271);
+	var pt = new BMap.Point(116.275615, 35.671271);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1064,8 +1094,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.111925,35.794263);
-	var pt = new BMap.Point(116.111925,35.794263);
+	var point = new BMap.Point(116.111925, 35.794263);
+	var pt = new BMap.Point(116.111925, 35.794263);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1077,8 +1107,8 @@
 	map.addOverlay(label);
 
 
-	var point = new BMap.Point(115.615512,34.81332);
-	var pt = new BMap.Point(115.615512,34.81332);
+	var point = new BMap.Point(115.615512, 34.81332);
+	var pt = new BMap.Point(115.615512, 34.81332);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1091,8 +1121,8 @@
 
 
 
-	var point = new BMap.Point(115.823053,36.126591);
-	var pt = new BMap.Point(115.823053,36.126591);
+	var point = new BMap.Point(115.823053, 36.126591);
+	var pt = new BMap.Point(115.823053, 36.126591);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1104,8 +1134,8 @@
 	map.addOverlay(label);
 
 
-	var point = new BMap.Point(115.270651,36.304805);
-	var pt = new BMap.Point(115.270651,36.304805);
+	var point = new BMap.Point(115.270651, 36.304805);
+	var pt = new BMap.Point(115.270651, 36.304805);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
@@ -1116,8 +1146,8 @@
 	label.setStyle(style);
 	map.addOverlay(label);
 
-	var point = new BMap.Point(116.026058,36.977671);
-	var pt = new BMap.Point(116.026058,36.977671);
+	var point = new BMap.Point(116.026058, 36.977671);
+	var pt = new BMap.Point(116.026058, 36.977671);
 	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
 	map.addOverlay(marker2);              // 将标注添加到地图中
 	var opts = {
