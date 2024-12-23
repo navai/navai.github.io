@@ -36,8 +36,8 @@
 		<!-- <a class="sel_btn" href="https://uri.amap.com/marker?position={$long},{$lat}&name=临朐泰邦单采血浆站">高德地图</a>
 		<a  class="sel_btn" href="http://api.map.baidu.com/marker?location={$lat},{$long}&title=临朐泰邦单采血浆站&content=&output=html">百度地图</a> -->
 		<!-- <button class="sel_btn" onclick="nav()">导航</button> -->
-		<a href="./travel/jianpuzhai.html" target="_blank"><i class="link-logo"></i><span class="link-title">柬埔寨路线</span></a>
-		<a href="./travel/roadmap.html" target="_blank"><i class="link-logo"></i><span class="link-title">安徽路线</span></a>
+		<a href="./jianpuzhai.html" target="_blank"><i class="link-logo"></i><span class="link-title">柬埔寨路线</span></a>
+		<a href="./roadmap.html" target="_blank"><i class="link-logo"></i><span class="link-title">安徽路线</span></a>
 
 	</div>
 </body>
@@ -860,6 +860,18 @@
 		offset: new BMap.Size(20, -20)    //设置文本偏移量
 	}
 	var label = new BMap.Label("跑马岭", opts);  // 创建文本标注对象
+	label.setStyle(style);
+	map.addOverlay(label);
+
+	var point = new BMap.Point(116.992958,36.371691);
+	var pt = new BMap.Point(116.992958,36.371691);
+	var marker2 = new BMap.Marker(pt, { icon: myIcon });  // 创建标注
+	map.addOverlay(marker2);              // 将标注添加到地图中
+	var opts = {
+		position: point,    // 指定文本标注所在的地理位置
+		offset: new BMap.Size(20, -20)    //设置文本偏移量
+	}
+	var label = new BMap.Label("灵岩寺", opts);  // 创建文本标注对象
 	label.setStyle(style);
 	map.addOverlay(label);
 
