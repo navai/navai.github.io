@@ -1,0 +1,48 @@
+:root {
+  /* Brand Colors - Clean & Bright */
+  --brand-primary: #3B82F6;
+  --brand-primary-light: #60A5FA;
+  --brand-primary-lighter: #DBEAFE;
+  --brand-primary-lightest: #EFF6FF;
+  --brand-bg: #F8FAFC;
+  --brand-bg-white: #FFFFFF;
+  --brand-bg-warm: #FEFCE8;
+  --brand-bg-cool: #F0F9FF;
+  --brand-text: #1E293B;
+  --brand-text-secondary: #64748B;
+  --brand-text-muted: #94A3B8;
+  --brand-border: #E2E8F0;
+  --brand-border-light: #F1F5F9;
+
+  /* Category Colors */
+  --cat-study: #8B5CF6;
+  --cat-study-bg: #F5F3FF;
+  --cat-dev: #3B82F6;
+  --cat-dev-bg: #EFF6FF;
+  --cat-tool: #10B981;
+  --cat-tool-bg: #ECFDF5;
+  --cat-fun: #F59E0B;
+  --cat-fun-bg: #FFFBEB;
+  --cat-read: #EC4899;
+  --cat-read-bg: #FDF2F8;
+  --cat-design: #6366F1;
+  --cat-design-bg: #EEF2FF;
+  --cat-life: #14B8A6;
+  --cat-life-bg: #F0FDFA;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.03);
+}
