@@ -1,254 +1,811 @@
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>star</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap-grid.css"> -->
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Stars - NavAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="skin/css/colors_and_type.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: { primary: 'var(--brand-primary)', bg: 'var(--brand-bg)', text: 'var(--brand-text)', muted: 'var(--brand-text-muted)' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--brand-bg); color: var(--brand-text); margin: 0; }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 220px; background: #0F172A;
+      z-index: 10; display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden;
+      transition: transform 0.3s ease, width 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    .sidebar-logo { padding: 16px 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo h1 { font-size: 16px; font-weight: 700; color: #F8FAFC; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .sidebar-logo h1 .logo-icon { width: 28px; height: 28px; border-radius: 8px; background: #3B82F6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-logo .tagline { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px; padding-left: 36px; }
+    .sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+    .sidebar-nav::-webkit-scrollbar { width: 3px; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+    .sidebar-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 16px; font-size: 13px; color: rgba(255,255,255,0.7);
+      cursor: pointer; transition: all 0.15s ease; text-decoration: none;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-nav-item:hover { background: rgba(255,255,255,0.06); color: #F8FAFC; }
+    .sidebar-nav-item.active {
+      background: rgba(255,255,255,0.1); color: #F8FAFC;
+      border-left-color: #3B82F6;
+    }
+    .sidebar-nav-item .nav-icon {
+      width: 16px; text-align: center; flex-shrink: 0; font-size: 13px;
+      opacity: 0.7;
+    }
+    .sidebar-nav-item.active .nav-icon { opacity: 1; }
+    .sidebar-nav-item.repo-item {
+      padding: 5px 16px 5px 32px;
+      font-size: 11px; color: rgba(255,255,255,0.45);
+      border-left: 3px solid transparent;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sidebar-nav-item.repo-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); }
+    .sidebar-nav-item.repo-item.nav-highlight {
+      color: #60A5FA; background: rgba(59,130,246,0.08);
+      border-left-color: #3B82F6;
+    }
+    .sidebar-bottom {
+      padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 11px; color: rgba(255,255,255,0.35);
+    }
+    .sidebar-bottom #datetime { margin-bottom: 4px; }
+
+    /* ===== Content Area ===== */
+    .content-area {
+      margin-left: 220px;
+      background: #F8FAFC;
+      min-height: 100vh;
+      transition: margin-left 0.3s ease;
+    }
+
+    /* ===== Content top bar ===== */
+    .content-top-bar {
+      position: sticky; top: 0; z-index: 5;
+      height: 48px; background: #FFFFFF;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; font-size: 13px;
+    }
+
+    /* ===== Hamburger ===== */
+    .hamburger-btn {
+      display: none; position: fixed; top: 10px; left: 10px; z-index: 20;
+      width: 36px; height: 36px; border-radius: 8px; background: #0F172A;
+      color: #F8FAFC; border: none; cursor: pointer; font-size: 16px;
+      align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Sidebar backdrop (mobile) ===== */
+    .sidebar-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 9; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .sidebar-backdrop.show { opacity: 1; }
+
+    /* ===== Filter Bar ===== */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 16px 0 12px;
+    }
+    .filter-btn {
+      padding: 5px 12px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 500;
+      border: 1px solid #E2E8F0; background: #FFFFFF; color: #64748B;
+      cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: #3B82F6; color: #3B82F6; background: #EFF6FF; }
+    .filter-btn.active { background: #3B82F6; color: #FFFFFF; border-color: #3B82F6; }
+    .filter-btn-action {
+      padding: 5px 12px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 500; border: none; cursor: pointer;
+      transition: all 0.15s ease; white-space: nowrap;
+    }
+    .filter-btn-refresh { background: #EFF6FF; color: #3B82F6; }
+    .filter-btn-refresh:hover { background: #DBEAFE; }
+    .filter-btn-update { background: #FEF3C7; color: #D97706; }
+    .filter-btn-update:hover { background: #FDE68A; }
+    .filter-btn-clear { background: #FEF2F2; color: #DC2626; }
+    .filter-btn-clear:hover { background: #FEE2E2; }
+    .sort-btn { border-color: #CBD5E1; font-size: 11px; padding: 4px 10px; }
+    .sort-btn:hover { border-color: #3B82F6; color: #3B82F6; background: #EFF6FF; }
+    .sort-btn.active { background: #0F172A; color: #FFFFFF; border-color: #0F172A; }
+
+    /* ===== Stats Bar ===== */
+    .stats-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 0; margin-bottom: 4px;
+    }
+    .stats-total { font-size: 13px; color: #64748B; }
+    .stats-total strong { color: #1E293B; font-weight: 700; }
+
+    /* ===== Star Card ===== */
+    .star-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      transition: all 0.15s ease;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .star-card:hover {
+      border-color: #93C5FD;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.10);
+    }
+    .star-card-name {
+      font-size: 13px; font-weight: 600; color: #1E293B;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      line-height: 1.4;
+    }
+    .star-card-name a { color: inherit; text-decoration: none; }
+    .star-card-name a:hover { color: #3B82F6; }
+    .star-card-desc {
+      font-size: 11px; color: #64748B; line-height: 1.5;
+      word-break: break-word;
+    }
+    .star-card-meta {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-top: auto;
+    }
+    .lang-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: var(--radius-full);
+      font-size: 10px; font-weight: 600; line-height: 1.6;
+    }
+    .lang-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .star-count {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; color: #64748B;
+    }
+    .star-count i { font-size: 10px; color: #F59E0B; }
+    .star-card-dates {
+      display: flex; align-items: center; gap: 10px; margin-top: 2px; flex-wrap: wrap;
+    }
+    .star-card-date {
+      font-size: 10px; color: #94A3B8; display: inline-flex; align-items: center;
+    }
+    .star-card-homepage {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; color: #3B82F6; text-decoration: none;
+    }
+    .star-card-homepage:hover { text-decoration: underline; }
+
+    /* ===== Language Colors ===== */
+    .lang-Python { background: #3572A5; color: #FFF; }
+    .lang-Python .lang-dot { background: #3572A5; }
+    .lang-Jupyter { background: #F37626; color: #FFF; }
+    .lang-Jupyter .lang-dot { background: #F37626; }
+    .lang-PHP { background: #4F5D95; color: #FFF; }
+    .lang-PHP .lang-dot { background: #4F5D95; }
+    .lang-Vue { background: #41B883; color: #FFF; }
+    .lang-Vue .lang-dot { background: #41B883; }
+    .lang-Java { background: #B07219; color: #FFF; }
+    .lang-Java .lang-dot { background: #B07219; }
+    .lang-C { background: #555555; color: #FFF; }
+    .lang-C .lang-dot { background: #555555; }
+    .lang-JavaScript { background: #F7DF1E; color: #333; }
+    .lang-JavaScript .lang-dot { background: #F7DF1E; }
+    .lang-Shell { background: #89E051; color: #333; }
+    .lang-Shell .lang-dot { background: #89E051; }
+    .lang-Go { background: #00ADD8; color: #FFF; }
+    .lang-Go .lang-dot { background: #00ADD8; }
+    .lang-Csharp { background: #178600; color: #FFF; }
+    .lang-Csharp .lang-dot { background: #178600; }
+    .lang-Cpp { background: #F34B7D; color: #FFF; }
+    .lang-Cpp .lang-dot { background: #F34B7D; }
+    .lang-Kotlin { background: #A97BFF; color: #FFF; }
+    .lang-Kotlin .lang-dot { background: #A97BFF; }
+    .lang-Lua { background: #000080; color: #FFF; }
+    .lang-Lua .lang-dot { background: #000080; }
+    .lang-Swift { background: #F05138; color: #FFF; }
+    .lang-Swift .lang-dot { background: #F05138; }
+    .lang-CSS { background: #563D7C; color: #FFF; }
+    .lang-CSS .lang-dot { background: #563D7C; }
+    .lang-HTML { background: #E34C26; color: #FFF; }
+    .lang-HTML .lang-dot { background: #E34C26; }
+    .lang-Dart { background: #00B4AB; color: #FFF; }
+    .lang-Dart .lang-dot { background: #00B4AB; }
+    .lang-TypeScript { background: #3178C6; color: #FFF; }
+    .lang-TypeScript .lang-dot { background: #3178C6; }
+    .lang-Dockerfile { background: #384D54; color: #FFF; }
+    .lang-Dockerfile .lang-dot { background: #384D54; }
+    .lang-Other { background: #E2E8F0; color: #64748B; }
+    .lang-Other .lang-dot { background: #94A3B8; }
+
+    /* ===== Empty State ===== */
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: #94A3B8;
+    }
+    .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+    .empty-state p { font-size: 14px; margin: 8px 0; }
+    .empty-state .empty-action {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 20px; border-radius: var(--radius-full);
+      background: #3B82F6; color: #FFF; font-size: 13px; font-weight: 500;
+      border: none; cursor: pointer; margin-top: 16px;
+      transition: all 0.15s ease;
+    }
+    .empty-state .empty-action:hover { background: #2563EB; }
+
+    /* ===== Loading Spinner ===== */
+    .loading-spinner {
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 20px; flex-direction: column; gap: 16px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #E2E8F0; border-top-color: #3B82F6;
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 1024px) {
+      .hamburger-btn { display: flex; }
+      .sidebar { transform: translateX(-100%); z-index: 30; }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-backdrop.show { display: block; }
+      .content-area { margin-left: 0; }
+    }
+  </style>
 </head>
-
-<style>
-    .card {
-        margin: 10px;
-    }
-
-    .projectname {
-        height: 60px;
-        overflow: hidden
-    }
-
-    .description {
-        height: 50px;
-        overflow: hidden;
-    }
-</style>
-
 <body>
-    <div class="container-fluid">
-        <!-- <button onclick="show('alldata')" type="button" class="btn btn-primary">全部 </button> -->
-        <button onclick="show('Python')" type="button" class="btn btn-primary">Python</button>
-        <button onclick="show('Jupyter Notebook')" type="button" class="btn btn-primary">Jupyter Notebook</button>
-        <button onclick="show('PHP')" type="button" class="btn btn-primary">PhP</button>
-        <button onclick="show('Vue')" type="button" class="btn btn-primary">Vue</button>
-        <button onclick="show('Java')" type="button" class="btn btn-primary">Java</button>
-        <button onclick="show('C')" type="button" class="btn btn-primary">C</button>
-        <button onclick="show('JavaScript')" type="button" class="btn btn-primary">JavaScript</button>
-        <button onclick="show('Shell')" type="button" class="btn btn-primary">Shell</button>
-        <button onclick="show('Go')" type="button" class="btn btn-primary">go</button>
-        <button onclick="show('C#')" type="button" class="btn btn-primary">C#</button>
-        <button onclick="show('C++')" type="button" class="btn btn-primary">C++</button>
-        <button onclick="show('Kotlin')" type="button" class="btn btn-primary">Kotlin</button>
-        <button onclick="show('Lua')" type="button" class="btn btn-primary">Lua</button>
-        <button onclick="show('Swift')" type="button" class="btn btn-primary">Swift</button>
-        <button onclick="show('CSS')" type="button" class="btn btn-primary">CSS</button>
-        <button onclick="show('HTML')" type="button" class="btn btn-primary">HTML</button>
-        <button onclick="show('Dart')" type="button" class="btn btn-primary">Dart</button>
-        <button onclick="show('TypeScript')" type="button" class="btn btn-primary">TypeScript</button>
-        <button onclick="show('Dockerfile')" type="button" class="btn btn-primary">Dockerfile</button>
-
-        <button onclick="show('')" type="button" class="btn btn-primary">其他</button>
-        <button onclick="show('bigdata')" type="button" class="btn btn-success">大数据</button>
-
-        <button onclick="init()" type="button" class="btn btn-info">刷新</button>
-        <button onclick="getdata(1)" type="button" class="btn btn-warning">更新</button>
-        <button onclick="clearStorage()" type="button" class="btn btn-warning">清除</button>
-
-        <div id="outter" class="row">
-        </div>
-        <div id="num" class="row">
-           
-        </div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h1>
+        <span class="logo-icon"><i class="fab fa-github" style="color:#FFF;font-size:14px;"></i></span>
+        GitHub Stars
+      </h1>
+      <div class="tagline">Starred Repositories</div>
     </div>
-    <script>
-        let num = '';
-        $('document').ready(init())
-        function init() {
-            listAllData()
-        }
-        function listAllData() {
-            createBD().then(store => {
-                var db = store.transaction.db;
-                var transaction = db.transaction(["customers"], "readonly");
-                var customerStore = transaction.objectStore("customers");
-                var getRequest = customerStore.getAll();
-                getRequest.onsuccess = function (event) {
-                    var allData = event.target.result;
-                    if (allData.length == 0) {
-                        // getdata(1)
-                        alert('数据为空,先更新')
-                    } else {
-                        showdata(allData)
-                    }
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="index.html" class="sidebar-nav-item">
+        <i class="fas fa-compass nav-icon"></i>
+        <span>导航首页</span>
+      </a>
+      <a class="sidebar-nav-item active">
+        <i class="fas fa-star nav-icon"></i>
+        <span>Star 仓库</span>
+      </a>
+      <div class="sidebar-nav-divider" style="height:1px;background:rgba(255,255,255,0.06);margin:6px 16px;"></div>
+      <div id="sidebarRepoList"></div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div id="datetime"></div>
+      <div class="copyright">NavAI &copy; 2026</div>
+    </div>
+  </aside>
 
-                };
-                getRequest.onerror = function (event) {
-                    console.error('Error listing data', event.target.error);
-                };
-            });
-        }
+  <!-- Hamburger -->
+  <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
 
-        function createBD() {
-            return new Promise((resolve, reject) => {
-                var request = indexedDB.open("myDatabase", 1);
-                request.onerror = function (event) {
-                    console.error("Database error: " + event.target.errorCode);
-                    reject(event.target.errorCode);
-                };
-                request.onsuccess = function (event) {
-                    var db = event.target.result;
-                    if (!db.objectStoreNames.contains('customers')) {
-                        var objectStore = db.createObjectStore("customers", { keyPath: "id" });
-                    }
-                    var transaction = db.transaction(["customers"], "readwrite");
-                    var store = transaction.objectStore("customers");
-                    transaction.oncomplete = function (event) {
-                        console.log("Transaction completed successfully!");
-                        resolve(store);
-                    };
-                };
+  <!-- Sidebar Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
-                request.onupgradeneeded = function (event) {
-                    var db = event.target.result;
-                    if (!db.objectStoreNames.contains('customers')) {
-                        db.createObjectStore("customers", { keyPath: "id" });
-                    }
-                };
-            });
-        }
-        function getdata(i) {
-            createBD().then(store => {
-                $.ajax({
-                    url: 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100',
-                    dataType: 'json',
-                    success: function (data) {
-                        var db = store.transaction.db;
-                        var transaction = db.transaction(["customers"], "readwrite");
-                        var customerStore = transaction.objectStore("customers");
-                        for (let i = 0; i < data.length; i++) {
-                            var putRequest = customerStore.put(data[i]);
-                            putRequest.onerror = function (event) {
-                                console.error('Error putting data', event.target.error);
-                            };
-                            putRequest.onsuccess = function (event) {
-                                console.log('Data put successfully');
-                            };
-                            // const description = data[i]['description'];
-                            // if (description && description.indexOf("数据") !== -1) {
-                            //     bigdata.push(data[i]);
-                            // }
-                        }
-                        if (data.length < 100) {
-                            init()
-                        } else {
-                            getdata(i + 1);
-                        }
-                    },
-                    error: function (err) {
-                        alert(JSON.stringify(err));
-                    }
-                });
-            });
-        }
-        function clearStorage() {
-            createBD().then(store => {
-                var db = store.transaction.db;
-                var transaction = db.transaction(["customers"], "readwrite");
-                var customerStore = transaction.objectStore("customers");
+  <!-- Content Area -->
+  <div class="content-area">
+    <!-- Top Bar -->
+    <div class="content-top-bar">
+      <div style="display:flex;align-items:center;gap:6px;color:var(--brand-text-muted);">
+        <i class="fas fa-home" style="font-size:12px;"></i>
+        <span style="opacity:0.5;">/</span>
+        <span style="font-weight:600;color:var(--brand-text);">Star 仓库</span>
+      </div>
+      <div class="stats-total" id="statsInfo">
+        <i class="fas fa-database" style="font-size:11px;margin-right:4px;"></i>
+        <span id="totalNum">-</span> 个仓库
+      </div>
+    </div>
 
-                var clearRequest = customerStore.clear();
+    <!-- Main Content -->
+    <main class="main-content px-3 sm:px-5 lg:px-6 py-4" style="max-width: 1400px;">
 
-                clearRequest.onerror = function (event) {
-                    console.error('Error clearing data', event.target.error);
-                };
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-lang="all" onclick="handleFilter(this, '')">
+          <i class="fas fa-layer-group" style="font-size:10px;margin-right:3px;"></i> 全部
+        </button>
+        <button class="filter-btn" data-lang="Python" onclick="handleFilter(this, 'Python')">
+          <span class="lang-dot" style="background:#3572A5;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Python
+        </button>
+        <button class="filter-btn" data-lang="Jupyter Notebook" onclick="handleFilter(this, 'Jupyter Notebook')">
+          <span class="lang-dot" style="background:#F37626;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Jupyter
+        </button>
+        <button class="filter-btn" data-lang="JavaScript" onclick="handleFilter(this, 'JavaScript')">
+          <span class="lang-dot" style="background:#F7DF1E;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> JavaScript
+        </button>
+        <button class="filter-btn" data-lang="TypeScript" onclick="handleFilter(this, 'TypeScript')">
+          <span class="lang-dot" style="background:#3178C6;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> TypeScript
+        </button>
+        <button class="filter-btn" data-lang="Java" onclick="handleFilter(this, 'Java')">
+          <span class="lang-dot" style="background:#B07219;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Java
+        </button>
+        <button class="filter-btn" data-lang="Go" onclick="handleFilter(this, 'Go')">
+          <span class="lang-dot" style="background:#00ADD8;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Go
+        </button>
+        <button class="filter-btn" data-lang="Vue" onclick="handleFilter(this, 'Vue')">
+          <span class="lang-dot" style="background:#41B883;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Vue
+        </button>
+        <button class="filter-btn" data-lang="PHP" onclick="handleFilter(this, 'PHP')">
+          <span class="lang-dot" style="background:#4F5D95;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> PHP
+        </button>
+        <button class="filter-btn" data-lang="C" onclick="handleFilter(this, 'C')">
+          <span class="lang-dot" style="background:#555555;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> C
+        </button>
+        <button class="filter-btn" data-lang="C#" onclick="handleFilter(this, 'C#')">
+          <span class="lang-dot" style="background:#178600;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> C#
+        </button>
+        <button class="filter-btn" data-lang="C++" onclick="handleFilter(this, 'C++')">
+          <span class="lang-dot" style="background:#F34B7D;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> C++
+        </button>
+        <button class="filter-btn" data-lang="Kotlin" onclick="handleFilter(this, 'Kotlin')">
+          <span class="lang-dot" style="background:#A97BFF;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Kotlin
+        </button>
+        <button class="filter-btn" data-lang="Swift" onclick="handleFilter(this, 'Swift')">
+          <span class="lang-dot" style="background:#F05138;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Swift
+        </button>
+        <button class="filter-btn" data-lang="Shell" onclick="handleFilter(this, 'Shell')">
+          <span class="lang-dot" style="background:#89E051;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Shell
+        </button>
+        <button class="filter-btn" data-lang="Dart" onclick="handleFilter(this, 'Dart')">
+          <span class="lang-dot" style="background:#00B4AB;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Dart
+        </button>
+        <button class="filter-btn" data-lang="Lua" onclick="handleFilter(this, 'Lua')">
+          <span class="lang-dot" style="background:#000080;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Lua
+        </button>
+        <button class="filter-btn" data-lang="CSS" onclick="handleFilter(this, 'CSS')">
+          <span class="lang-dot" style="background:#563D7C;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> CSS
+        </button>
+        <button class="filter-btn" data-lang="HTML" onclick="handleFilter(this, 'HTML')">
+          <span class="lang-dot" style="background:#E34C26;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> HTML
+        </button>
+        <button class="filter-btn" data-lang="Dockerfile" onclick="handleFilter(this, 'Dockerfile')">
+          <span class="lang-dot" style="background:#384D54;display:inline-block;width:6px;height:6px;border-radius:50%;"></span> Dockerfile
+        </button>
+        <button class="filter-btn" data-lang="other" onclick="handleFilter(this, '')">
+          <i class="fas fa-ellipsis" style="font-size:10px;margin-right:3px;"></i> 其他
+        </button>
 
-                clearRequest.onsuccess = function (event) {
-                    console.log('Data cleared successfully');
-                };
-            });
-        }
+        <div style="flex:1;"></div>
 
-        function showdata(data) {
-            data = data.reverse()
-            let html = ''
-            for (let i = 0; i < data.length; i++) {
-                const element = data[i];
-                name = element['name']
-                description = element['description']
-                html_url = element['html_url']
-                language = element['language']
-                stargazers_count = element['stargazers_count']
-                created_at = element['created_at']
-                pushed_at = element['pushed_at']
-                updated_at = element['updated_at']
+        <!-- Sort Buttons -->
+        <span style="font-size:11px;color:#94A3B8;margin-right:2px;"><i class="fas fa-sort" style="margin-right:3px;"></i>排序</span>
+        <button class="filter-btn sort-btn active" data-sort="created_desc" onclick="handleSort(this, 'created_at', 'desc')">创建 ↓</button>
+        <button class="filter-btn sort-btn" data-sort="created_asc" onclick="handleSort(this, 'created_at', 'asc')">创建 ↑</button>
+        <button class="filter-btn sort-btn" data-sort="pushed_desc" onclick="handleSort(this, 'pushed_at', 'desc')">更新 ↓</button>
+        <button class="filter-btn sort-btn" data-sort="pushed_asc" onclick="handleSort(this, 'pushed_at', 'asc')">更新 ↑</button>
+        <button class="filter-btn sort-btn" data-sort="stars_desc" onclick="handleSort(this, 'stargazers_count', 'desc')">Stars ↓</button>
+        <button class="filter-btn sort-btn" data-sort="stars_asc" onclick="handleSort(this, 'stargazers_count', 'asc')">Stars ↑</button>
 
-                homepage = element['homepage']
-                html +=
-                    "<div class='col-md-2'><div class='card'><div class='card-body'>"
-                    + "<h4 class = 'card-title projectname'>" + name + "</h4>"
-                    + "<p class = 'card-text description'>" + description + " </p>"
-                    + "<a class = 'card-link' href = '#'> " + language + "</a>"
-                    + "<a class = 'card-link' target='_blank'  href = '" + html_url + "'>" + stargazers_count + " </a>"
-                    + "<a class = 'card-link' target='_blank'  href = '" + homepage + "'>homepage</a>"
-                    + "<p  >" + created_at + " </p>"
-                    + "<a  >" + pushed_at + " </a>"
-                    + "</div></div></div>"
+        <button class="filter-btn-action filter-btn-refresh" onclick="init()">
+          <i class="fas fa-sync-alt" style="font-size:10px;margin-right:3px;"></i> 刷新
+        </button>
+        <button class="filter-btn-action filter-btn-update" onclick="getdata(1)">
+          <i class="fas fa-cloud-download-alt" style="font-size:10px;margin-right:3px;"></i> 更新
+        </button>
+        <button class="filter-btn-action filter-btn-clear" onclick="clearStorage()">
+          <i class="fas fa-trash-alt" style="font-size:10px;margin-right:3px;"></i> 清除
+        </button>
+      </div>
+
+      <!-- Cards Grid -->
+      <div id="outter" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <i class="fas fa-star"></i>
+        <p style="font-size:16px;font-weight:600;color:#64748B;">暂无 Star 数据</p>
+        <p>点击下方按钮从 GitHub 同步你的 Star 仓库</p>
+        <button class="empty-action" onclick="getdata(1)">
+          <i class="fas fa-cloud-download-alt"></i> 从 GitHub 拉取数据
+        </button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-spinner" id="loadingState" style="display:none;">
+        <div class="spinner"></div>
+        <p style="font-size:13px;color:#94A3B8;">正在加载...</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ===== Global Sort State =====
+    var currentSortField = 'created_at';
+    var currentSortOrder = 'desc'; // 'asc' or 'desc'
+    var currentFilteredData = null; // cache for re-sorting without re-fetch
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarBackdrop').classList.toggle('show');
+    }
+
+    // ===== DateTime =====
+    function updateDateTime() {
+      const now = new Date();
+      const days = ['周日','周一','周二','周三','周四','周五','周六'];
+      const str = now.getFullYear() + '/' +
+        String(now.getMonth()+1).padStart(2,'0') + '/' +
+        String(now.getDate()).padStart(2,'0') + ' ' +
+        days[now.getDay()];
+      document.getElementById('datetime').textContent = str;
+    }
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+
+    // ===== IndexedDB =====
+    function createBD() {
+      return new Promise((resolve, reject) => {
+        var request = indexedDB.open("myDatabase", 1);
+        request.onerror = function (event) {
+          console.error("Database error: " + event.target.errorCode);
+          reject(event.target.errorCode);
+        };
+        request.onsuccess = function (event) {
+          var db = event.target.result;
+          if (!db.objectStoreNames.contains('customers')) {
+            var objectStore = db.createObjectStore("customers", { keyPath: "id" });
+          }
+          var transaction = db.transaction(["customers"], "readwrite");
+          var store = transaction.objectStore("customers");
+          transaction.oncomplete = function (event) {
+            resolve(store);
+          };
+        };
+        request.onupgradeneeded = function (event) {
+          var db = event.target.result;
+          if (!db.objectStoreNames.contains('customers')) {
+            db.createObjectStore("customers", { keyPath: "id" });
+          }
+        };
+      });
+    }
+
+    function init() {
+      listAllData();
+    }
+
+    function listAllData() {
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('outter').innerHTML = '';
+      createBD().then(store => {
+        var db = store.transaction.db;
+        var transaction = db.transaction(["customers"], "readonly");
+        var customerStore = transaction.objectStore("customers");
+        var getRequest = customerStore.getAll();
+        getRequest.onsuccess = function (event) {
+          var allData = event.target.result;
+          document.getElementById('loadingState').style.display = 'none';
+          if (allData.length == 0) {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('totalNum').textContent = '0';
+          } else {
+            showdata(allData);
+          }
+        };
+        getRequest.onerror = function (event) {
+          console.error('Error listing data', event.target.error);
+          document.getElementById('loadingState').style.display = 'none';
+        };
+      });
+    }
+
+    function getdata(i) {
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('emptyState').style.display = 'none';
+      createBD().then(store => {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.github.com/users/faithxie/starred?page=' + i + '&per_page=100', true);
+        xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            var db = store.transaction.db;
+            var transaction = db.transaction(["customers"], "readwrite");
+            var customerStore = transaction.objectStore("customers");
+            for (let j = 0; j < data.length; j++) {
+              customerStore.put(data[j]);
             }
-            num = data.length
-            $('#num').html(num);
-            $('#outter').html(html);
+            if (data.length < 100) {
+              init();
+            } else {
+              getdata(i + 1);
+            }
+          } else {
+            alert('请求失败: ' + xhr.status);
+            document.getElementById('loadingState').style.display = 'none';
+          }
+        };
+        xhr.onerror = function () {
+          alert('网络请求失败');
+          document.getElementById('loadingState').style.display = 'none';
+        };
+        xhr.send();
+      });
+    }
+
+    function clearStorage() {
+      if (!confirm('确认清除所有本地 Star 缓存数据？')) return;
+      createBD().then(store => {
+        var db = store.transaction.db;
+        var transaction = db.transaction(["customers"], "readwrite");
+        var customerStore = transaction.objectStore("customers");
+        var clearRequest = customerStore.clear();
+        clearRequest.onsuccess = function () {
+          init();
+        };
+        clearRequest.onerror = function () {
+          alert('清除失败');
+        };
+      });
+    }
+
+    // ===== Render Cards =====
+    function showdata(data) {
+      currentFilteredData = data;
+      applySortAndRender();
+    }
+
+    function applySortAndRender() {
+      if (!currentFilteredData) return;
+      var data = currentFilteredData.slice();
+      // Sort
+      data.sort(function(a, b) {
+        var valA = a[currentSortField] || '';
+        var valB = b[currentSortField] || '';
+        if (currentSortOrder === 'asc') {
+          return valA > valB ? 1 : valA < valB ? -1 : 0;
+        } else {
+          return valA < valB ? 1 : valA > valB ? -1 : 0;
         }
+      });
+      document.getElementById('totalNum').textContent = data.length;
+      let html = '';
+      for (let i = 0; i < data.length; i++) {
+        const el = data[i];
+        const name = el['name'] || '未命名';
+        const description = el['description'] || '';
+        const html_url = el['html_url'] || '#';
+        const language = el['language'] || '';
+        const stargazers_count = el['stargazers_count'] || 0;
+        const homepage = el['homepage'] || '';
+        const pushed_at = el['pushed_at'] || '';
+        const created_at = el['created_at'] || '';
 
-        function searchDataByCondition(dbName, objectStoreName, conditionKey, conditionValue) {
-            return new Promise((resolve, reject) => {
-                var request = indexedDB.open(dbName);
+        const langClass = getLangClass(language);
+        const langColor = getLangColor(language);
+        const langDisplay = language || 'Other';
+        const langCls = language ? getLangCssClass(language) : 'lang-Other';
+        const cardId = 'card-' + el['id'];
 
-                request.onsuccess = function (event) {
-                    var db = event.target.result;
-                    var transaction = db.transaction(objectStoreName, 'readonly');
-                    var objectStore = transaction.objectStore(objectStoreName);
-                    var data = [];
+        html += '<div class="star-card" id="' + cardId + '">' +
+          '<div class="star-card-name"><a href="' + html_url + '" target="_blank" title="' + escapeHtml(name) + '">' + escapeHtml(name) + '</a></div>' +
+          (description ? '<div class="star-card-desc" title="' + escapeHtml(description) + '">' + escapeHtml(description) + '</div>' : '<div class="star-card-desc" style="color:#CBD5E1;">暂无描述</div>') +
+          '<div class="star-card-meta">' +
+            '<span class="lang-badge ' + langCls + '"><span class="lang-dot"></span>' + escapeHtml(langDisplay) + '</span>' +
+            (stargazers_count > 0 ? '<span class="star-count"><i class="fas fa-star"></i>' + formatNum(stargazers_count) + '</span>' : '') +
+            (homepage ? ' <a class="star-card-homepage" href="' + escapeHtml(homepage) + '" target="_blank"><i class="fas fa-external-link-alt"></i> demo</a>' : '') +
+          '</div>' +
+          '<div class="star-card-dates">' +
+            (created_at ? '<span class="star-card-date"><i class="fas fa-plus-circle" style="margin-right:3px;font-size:9px;"></i>创建 ' + formatDate(created_at) + '</span>' : '') +
+            (pushed_at ? '<span class="star-card-date"><i class="fas fa-pen" style="margin-right:3px;font-size:9px;"></i>更新 ' + formatDate(pushed_at) + '</span>' : '') +
+          '</div>' +
+        '</div>';
+      }
+      document.getElementById('outter').innerHTML = html;
+      document.getElementById('emptyState').style.display = 'none';
+      renderSidebarRepoList(data);
+    }
 
-                    var cursorRequest = objectStore.openCursor();
+    // ===== Sidebar Repo List =====
+    function renderSidebarRepoList(data) {
+      var container = document.getElementById('sidebarRepoList');
+      if (!container) return;
+      var html = '';
+      for (var i = 0; i < data.length; i++) {
+        var name = data[i]['name'] || '未命名';
+        var cardId = 'card-' + data[i]['id'];
+        html += '<a class="sidebar-nav-item repo-item" data-card-id="' + cardId + '" onclick="scrollToCard(\'' + cardId + '\', this)" title="' + escapeHtml(name) + '">' + escapeHtml(name) + '</a>';
+      }
+      container.innerHTML = html;
+    }
 
-                    cursorRequest.onsuccess = function (event) {
-                        var cursor = event.target.result;
-                        if (cursor) {
-                            if (cursor.value[conditionKey] === conditionValue) {
-                                data.push(cursor.value);
-                            }else{
-                                // console.log('no match');
-                            }
-                            cursor.continue();
-                        } else {
-                            resolve(data);
-                        }
-                    };
+    function scrollToCard(cardId, navEl) {
+      var card = document.getElementById(cardId);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Highlight card briefly
+        card.style.boxShadow = '0 0 0 2px #3B82F6';
+        setTimeout(function() { card.style.boxShadow = ''; }, 1500);
+      }
+      // Highlight nav item
+      document.querySelectorAll('.repo-item.nav-highlight').forEach(function(el) { el.classList.remove('nav-highlight'); });
+      if (navEl) navEl.classList.add('nav-highlight');
+    }
 
-                    cursorRequest.onerror = function (event) {
-                        reject('Error searching data by condition');
-                    };
-                };
+    // ===== Filter =====
+    function handleFilter(btn, type) {
+      // Update active state
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-                request.onerror = function (event) {
-                    reject('Error opening database');
-                };
-            });
+      if (type === '') {
+        // "全部" or "其他" handled differently
+        const lang = btn.dataset.lang;
+        if (lang === 'all') {
+          listAllData();
+          return;
         }
-        function show(type) {
-            console.log(type);
-            searchDataByCondition('myDatabase', 'customers', 'language', type)
-                .then(data => {
-                    showdata(data)
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
+        // "其他" - fetch all then filter in JS
+        filterOtherLangs();
+        return;
+      }
 
-    </script>
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('outter').innerHTML = '';
+      document.getElementById('emptyState').style.display = 'none';
+
+      searchDataByCondition('myDatabase', 'customers', 'language', type)
+        .then(data => {
+          document.getElementById('loadingState').style.display = 'none';
+          if (data.length === 0) {
+            document.getElementById('outter').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94A3B8;font-size:13px;"><i class="fas fa-search" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>没有找到该语言的仓库</div>';
+          } else {
+            showdata(data);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          document.getElementById('loadingState').style.display = 'none';
+        });
+    }
+
+    // ===== Sort =====
+    function handleSort(btn, field, order) {
+      document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSortField = field;
+      currentSortOrder = order;
+      if (currentFilteredData) {
+        applySortAndRender();
+      }
+    }
+
+    function filterOtherLangs() {
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('outter').innerHTML = '';
+      document.getElementById('emptyState').style.display = 'none';
+      createBD().then(store => {
+        var db = store.transaction.db;
+        var transaction = db.transaction(["customers"], "readonly");
+        var customerStore = transaction.objectStore("customers");
+        var getRequest = customerStore.getAll();
+        getRequest.onsuccess = function (event) {
+          var allData = event.target.result;
+          // Filter out known languages
+          var knownLangs = ['Python','Jupyter Notebook','PHP','Vue','Java','C','JavaScript','Shell','Go','C#','C++','Kotlin','Lua','Swift','CSS','HTML','Dart','TypeScript','Dockerfile'];
+          var other = allData.filter(item => !item.language || !knownLangs.includes(item.language));
+          document.getElementById('loadingState').style.display = 'none';
+          if (other.length === 0) {
+            document.getElementById('outter').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#94A3B8;font-size:13px;"><i class="fas fa-search" style="font-size:24px;margin-bottom:8px;display:block;opacity:0.3;"></i>没有找到其他语言的仓库</div>';
+          } else {
+            showdata(other);
+          }
+        };
+      });
+    }
+
+    function searchDataByCondition(dbName, objectStoreName, conditionKey, conditionValue) {
+      return new Promise((resolve, reject) => {
+        var request = indexedDB.open(dbName);
+        request.onsuccess = function (event) {
+          var db = event.target.result;
+          var transaction = db.transaction(objectStoreName, 'readonly');
+          var objectStore = transaction.objectStore(objectStoreName);
+          var data = [];
+          var cursorRequest = objectStore.openCursor();
+          cursorRequest.onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+              if (cursor.value[conditionKey] === conditionValue) {
+                data.push(cursor.value);
+              }
+              cursor.continue();
+            } else {
+              resolve(data);
+            }
+          };
+          cursorRequest.onerror = function (event) {
+            reject('Error searching data by condition');
+          }
+        };
+        request.onerror = function (event) {
+          reject('Error opening database');
+        };
+      });
+    }
+
+    // ===== Helpers =====
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatNum(n) {
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+      return n;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var d = new Date(dateStr);
+        return d.getFullYear() + '-' +
+          String(d.getMonth()+1).padStart(2,'0') + '-' +
+          String(d.getDate()).padStart(2,'0');
+      } catch(e) { return dateStr; }
+    }
+
+    function getLangClass(lang) {
+      return lang ? 'lang-' + lang.replace(/[^a-zA-Z#]/g, '') : 'lang-Other';
+    }
+
+    function getLangColor(lang) {
+      var colors = {
+        'Python':'#3572A5','Jupyter Notebook':'#F37626','PHP':'#4F5D95','Vue':'#41B883',
+        'Java':'#B07219','C':'#555555','JavaScript':'#F7DF1E','Shell':'#89E051',
+        'Go':'#00ADD8','C#':'#178600','C++':'#F34B7D','Kotlin':'#A97BFF',
+        'Lua':'#000080','Swift':'#F05138','CSS':'#563D7C','HTML':'#E34C26',
+        'Dart':'#00B4AB','TypeScript':'#3178C6','Dockerfile':'#384D54'
+      };
+      return colors[lang] || '#94A3B8';
+    }
+
+    function getLangCssClass(lang) {
+      var map = {
+        'Python':'lang-Python','Jupyter Notebook':'lang-Jupyter','PHP':'lang-PHP','Vue':'lang-Vue',
+        'Java':'lang-Java','C':'lang-C','JavaScript':'lang-JavaScript','Shell':'lang-Shell',
+        'Go':'lang-Go','C#':'lang-Csharp','C++':'lang-Cpp','Kotlin':'lang-Kotlin',
+        'Lua':'lang-Lua','Swift':'lang-Swift','CSS':'lang-CSS','HTML':'lang-HTML',
+        'Dart':'lang-Dart','TypeScript':'lang-TypeScript','Dockerfile':'lang-Dockerfile'
+      };
+      return map[lang] || 'lang-Other';
+    }
+
+    // ===== Init =====
+    init();
+  </script>
 </body>
-
 </html>
