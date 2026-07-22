@@ -386,7 +386,7 @@ function isInsidePen(x, y) {
 var ASSET_BASE = 'assets/animals/';
 var AUDIO_PATH = 'assets/audio/';
 
-// 羊的20种皮肤图片
+// 羊的20种皮肤图片 + 3种人头像羊
 var SHEEP_IMAGES = [
   'animal_084_114x139.png',
   'animal_002_114x140.png',
@@ -407,11 +407,21 @@ var SHEEP_IMAGES = [
   'animal_119_114x139.png',
   'animal_124_114x139.png',
   'animal_127_114x139.png',
-  'animal_130_114x139.png'
+  'animal_130_114x139.png',
+  // 人头像羊（3种）
+  'human_sheep_1_114x139.png',
+  'human_sheep_2_114x139.png',
+  'human_sheep_3_114x139.png'
 ];
 
-// 狗的图片
-var DOG_IMAGE = 'animal_094_119x140.png';
+// 狗的图片（普通狗 + 3种人头像狗，随机选择）
+var DOG_IMAGES = [
+  'animal_094_119x140.png',
+  'human_dog_1_119x140.png',
+  'human_dog_2_119x140.png',
+  'human_dog_3_119x140.png'
+];
+var DOG_IMAGE = DOG_IMAGES[0]; // 默认普通狗
 
 // ============================================
 // 音效系统
@@ -487,7 +497,7 @@ function toggleBgm() {
 // ============================================
 var loadedImages = {};
 var loadCount = 0;
-var totalToLoad = SHEEP_IMAGES.length + 1; // 20只羊 + 1只狗
+var totalToLoad = SHEEP_IMAGES.length + DOG_IMAGES.length;
 
 function loadImage(name, callback) {
   var img = new Image();
@@ -517,7 +527,9 @@ function startGame() {
 for (var i = 0; i < SHEEP_IMAGES.length; i++) {
   loadImage(SHEEP_IMAGES[i], startGame);
 }
-loadImage(DOG_IMAGE, startGame);
+for (var i = 0; i < DOG_IMAGES.length; i++) {
+  loadImage(DOG_IMAGES[i], startGame);
+}
 
 var gameStarted = false;
 var origStart = startGame;
@@ -1460,8 +1472,9 @@ function initGame() {
     sheep.push(new Sheep(sx, sy, imgName));
   }
 
-  // 创建狗（初始在中间偏右位置）
-  dog = new Dog(BASE_W * 0.6, groundY + 80, DOG_IMAGE);
+  // 创建狗（初始在中间偏右位置，随机选择皮肤）
+  var dogImgName = DOG_IMAGES[Math.floor(Math.random() * DOG_IMAGES.length)];
+  dog = new Dog(BASE_W * 0.6, groundY + 80, dogImgName);
 
   // 重置UI
   updateCounter();
