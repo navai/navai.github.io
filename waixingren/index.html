@@ -232,7 +232,7 @@
 <audio id="sndMock" src="audio/alienMock.mp3" preload="auto"></audio>
 
 <!-- 外星人形象 -->
-<img id="alienImg" src="alien_sprites/alien_bighead_original.png" style="display:none;">
+<img id="alienImg" src="alien_sprites/alien_original_green.png" style="display:none;">
 <img id="alienImgOriginal" src="alien_sprites/alien_original_green.png" style="display:none;">
 
 <script>
@@ -243,8 +243,8 @@ const CONFIG = {
   magSize: 5,
   reloadTime: 2000,
   aimZoom: 2.0,
-  chameleonOpacity: 0.45, // 变色龙透明度（越高越明显）
-  chameleonColorBlend: 0, // 颜色混合程度（0=原色，1=完全背景色）
+  chameleonOpacity: 0.45,
+  chameleonColorBlend: 0,
 };
 
 // ==================== 游戏状态 ====================
@@ -419,7 +419,7 @@ function generateCity() {
   
   // 车辆
   const carPalette = [
-    '#4a90d9', // 蓝色（和截图匹配）
+    '#4a90d9',
     '#c0392b', '#27ae60', '#f39c12', '#8e44ad',
     '#ecf0f1', '#7f8c8d', '#d35400', '#2c3e50', '#16a085'
   ];
@@ -433,7 +433,7 @@ function generateCity() {
       speed: (Math.random() - 0.5) * 0.4,
       type: Math.random() > 0.65 ? 'muscle' : 'sedan',
       depth: 1 + Math.random(),
-      hasStripes: Math.random() > 0.5 // 白条纹（像截图里的车）
+      hasStripes: Math.random() > 0.5
     });
   }
   gameState.cars.sort((a, b) => a.depth - b.depth);
@@ -678,11 +678,8 @@ function drawCar(ctx, car) {
   ctx.fill();
   
   if (car.type === 'muscle') {
-    // 肌肉车（类似截图里的蓝色跑车）
     ctx.fillStyle = car.color;
-    // 车身
     ctx.fillRect(x, y + h * 0.2, w, h * 0.55);
-    // 车顶（流线型）
     ctx.beginPath();
     ctx.moveTo(x + w * 0.2, y + h * 0.2);
     ctx.quadraticCurveTo(x + w * 0.3, y - h * 0.15, x + w * 0.45, y - h * 0.1);
@@ -691,14 +688,12 @@ function drawCar(ctx, car) {
     ctx.closePath();
     ctx.fill();
     
-    // 白条纹（赛车条纹）
     if (car.hasStripes) {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(x + w * 0.4, y - h * 0.08, w * 0.06, h * 0.35);
       ctx.fillRect(x + w * 0.5, y - h * 0.08, w * 0.06, h * 0.35);
     }
     
-    // 挡风玻璃
     ctx.fillStyle = 'rgba(80, 120, 160, 0.7)';
     ctx.beginPath();
     ctx.moveTo(x + w * 0.28, y + h * 0.15);
@@ -714,7 +709,6 @@ function drawCar(ctx, car) {
     ctx.fill();
     
   } else {
-    // 普通轿车
     ctx.fillStyle = car.color;
     ctx.fillRect(x, y + h * 0.2, w, h * 0.5);
     ctx.beginPath();
@@ -847,7 +841,7 @@ function generateEnemies() {
     }
   });
   
-  // 车旁藏点（和车颜色匹配）
+  // 车旁藏点
   gameState.cars.forEach((car, idx) => {
     if (Math.random() > 0.35) {
       hideSpots.push({
@@ -884,18 +878,15 @@ function generateEnemies() {
     }
   });
   
-  // 安全边距：确保瞄准镜可以到达所有外星人
-  // 瞄准镜移动范围是屏幕的 5% - 95%
-  const safeMarginX = W * 0.10;  // 左右各留10%边距
-  const safeMarginY = H * 0.10;  // 上下各留10%边距
+  // 安全边距
+  const safeMarginX = W * 0.10;
+  const safeMarginY = H * 0.10;
   
-  // 过滤掉超出安全范围的藏点
   const validSpots = hideSpots.filter(spot => {
     return spot.x > safeMarginX && spot.x < W - safeMarginX &&
            spot.y > safeMarginY && spot.y < H - safeMarginY;
   });
   
-  // 打乱选取
   shuffleArray(validSpots);
   const selected = validSpots.slice(0, CONFIG.totalEnemies);
   
@@ -926,7 +917,7 @@ function shuffleArray(arr) {
   }
 }
 
-// ==================== 火柴人外星人绘制 ====================
+// ==================== 外星人绘制 ====================
 function getPixelColor(x, y) {
   if (!gameState.bgCanvas) return '#888888';
   const bgCtx = gameState.bgCanvas.getContext('2d');
@@ -1022,7 +1013,6 @@ function drawAlien(ctx, alien, time) {
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 4]);
     
-    // 四方边框
     const bw = drawW * 0.6;
     const bh = drawH * 0.55;
     ctx.strokeRect(-bw / 2, -drawH * 0.85 - bh * 0.05, bw, bh);
@@ -1097,7 +1087,6 @@ function render() {
   }
   
   if (gameState.aimMode) {
-    // 瞄准模式放大
     ctx.save();
     const zoom = CONFIG.aimZoom;
     const offsetX = gameState.aimX - W / 2;
@@ -1322,13 +1311,11 @@ canvas.addEventListener('mouseup', (e) => {
   const clickY = (e.clientY - rect.top) * (H / rect.height);
   
   if (gameState.aimMode) {
-    // 开瞄准镜：判断是拖动还是点击
     const dist = Math.sqrt(Math.pow(e.clientX - dragStartX, 2) + Math.pow(e.clientY - dragStartY, 2));
     if (!gameState.reloading && dist < 10) {
       shoot(clickX, clickY);
     }
   } else {
-    // 不开瞄准镜：直接点击射击
     if (!gameState.reloading) {
       shoot(clickX, clickY);
     }
@@ -1370,13 +1357,11 @@ canvas.addEventListener('touchend', (e) => {
   const clickY = (touch.clientY - rect.top) * (H / rect.height);
   
   if (gameState.aimMode) {
-    // 开瞄准镜：判断是拖动还是点击
     if (!gameState.reloading && isDragging) {
       const dist = Math.sqrt(Math.pow(touch.clientX - dragStartX, 2) + Math.pow(touch.clientY - dragStartY, 2));
       if (dist < 15) shoot(clickX, clickY);
     }
   } else {
-    // 不开瞄准镜：直接点击射击
     if (!gameState.reloading) {
       shoot(clickX, clickY);
     }
@@ -1403,7 +1388,6 @@ function shoot(clickX, clickY) {
   let worldX, worldY;
   
   if (gameState.aimMode) {
-    // 开瞄准镜：屏幕中心 = 准星，需要转换到世界坐标
     const cx = W / 2, cy = H / 2;
     const zoom = CONFIG.aimZoom;
     const offsetX = gameState.aimX - W / 2;
@@ -1411,7 +1395,6 @@ function shoot(clickX, clickY) {
     worldX = (cx - W/2) / zoom + W/2 + offsetX * (1 - 1/zoom);
     worldY = (cy - H/2) / zoom + H/2 + offsetY * (1 - 1/zoom);
   } else {
-    // 不开瞄准镜：点击位置就是射击位置
     worldX = clickX;
     worldY = clickY;
   }
@@ -1434,7 +1417,6 @@ function shoot(clickX, clickY) {
       gameState.enemiesKilled++;
       gameState.score += 100;
       
-      // 爆头音效
       playSound('headshot');
       setTimeout(() => playSound('scream'), 150);
       
