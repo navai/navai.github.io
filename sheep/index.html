@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐑 牧羊犬游戏</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #1a1a1a;
+  }
+  #gameCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    cursor: pointer;
+  }
+
+  /* ===== HUD 悬浮层 ===== */
+  .hud {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* 左上角标题 */
+  .hud-title {
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #5D4037;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hud-title span { color: #8BC34A; font-size: 22px; }
+
+  /* 右上角计数器 */
+  .hud-counter {
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #5D4037;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hud-counter .count { color: #FF5722; font-size: 22px; }
+
+  /* 操作提示 */
+  .hud-hint {
+    top: 72px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #666;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+
+  /* 底部按钮 */
+  .hud-controls {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+  }
+  .btn {
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #5D4037;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+    pointer-events: auto;
+    font-family: inherit;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28); }
+  .btn:active { transform: translateY(-1px); }
+  .btn.primary {
+    background: linear-gradient(135deg, #8BC34A, #689F38);
+    color: white;
+  }
+  .btn.primary:hover {
+    background: linear-gradient(135deg, #9CCC65, #7CB342);
+  }
+
+  /* 全部入圈提示 */
+  .win-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(15px);
+    padding: 30px 60px;
+    border-radius: 24px;
+    font-size: 36px;
+    font-weight: 800;
+    color: #5D4037;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+    display: none;
+    text-align: center;
+    pointer-events: none;
+  }
+  .win-banner .emoji { font-size: 48px; margin-bottom: 8px; }
+  .win-banner .sub { font-size: 18px; font-weight: 500; color: #888; margin-top: 8px; }
+
+  /* 加载提示 */
+  .loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #5D4037;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<!-- HUD 悬浮元素 -->
+<div class="hud hud-title">🐑 <span>牧羊犬游戏</span></div>
+<div class="hud hud-hint">点击地面移动狗，把羊赶进左边的羊圈！</div>
+<div class="hud hud-counter">已入圈: <span class="count" id="counter">0 / 8</span> 只</div>
+
+<div class="hud-controls">
+  <button class="btn" onclick="restartGame()">🔄 重新开始</button>
+  <button class="btn primary" onclick="toggleBgm()">🎵 背景音乐</button>
+  <button class="btn" onclick="addSheep()">🐑 增加一只羊</button>
+</div>
+
+<div class="win-banner" id="winBanner">
+  <div class="emoji">🎉</div>
+  <div>全部入圈！</div>
+  <div class="sub">太棒了，你是优秀的牧羊犬！</div>
+</div>
+
+<div class="loading" id="loading">正在加载...</div>
+
+<script>
+// ============================================
+// 游戏配置常量
+// ============================================
+
+// 基准分辨率（所有坐标基于此基准坐标系）
+var BASE_W = 1920;
+var BASE_H = 1080;
+
+// 游戏核心配置
+var GAME_CONFIG = {
+  // 地面位置（占基准高度的比例）
+  GROUND_RATIO: 0.58,
+  // 羊圈配置
+  PEN: {
+    WIDTH_RATIO: 0.26,        // 羊圈宽度占画面比例
+    TOP_OFFSET: 50,           // 顶部距地面线偏移（基准像素）
+    BOTTOM_OFFSET: 40,        // 底部距画面底边偏移
+    OPENING_HEIGHT: 160,      // 开口高度（基准像素）
+    FENCE_POST_RADIUS: 8,     // 栅栏木桩半径
+    FENCE_POST_SPACING: 55,   // 栅栏木桩间距
+    FENCE_RAIL_COUNT: 3,      // 横向木条数量
+    DIRT_COLOR: '#8B7355',    // 泥土色
+    FENCE_COLOR: '#6D4C2B',   // 栅栏主色
+    FENCE_LIGHT_COLOR: '#8B6914' // 栅栏亮色
+  },
+  // 羊的配置
+  SHEEP: {
+    INITIAL_COUNT: 8,
+    RUN_SPEED: 340,           // 奔跑速度（基准像素/秒）
+    WALK_SPEED: 60,           // 走路速度（基准像素/秒）
+    MIN_SCALE: 1.0,           // 最小缩放
+    MAX_SCALE: 1.7,           // 最大缩放
+    PERCEPTION_RANGE: 300,    // 感知狗的范围（基准像素）
+    SOUND_COOLDOWN: 400,      // 叫声冷却（毫秒）
+    SOUND_RANDOM: 800,        // 冷却随机增量
+    IDLE_CHANCE: 0.4,         // 空闲状态概率
+    BOUNCE_HEIGHT: 10,        // 弹跳高度（基准像素）
+    BOUNCE_HEIGHT_WALK: 4,    // 走路弹跳高度
+    ROTATION_RUN: 0.04,       // 奔跑旋转幅度
+    ROTATION_WALK: 0.015,     // 走路旋转幅度
+    SQUASH_RUN: 0.08,         // 奔跑挤压幅度
+    SQUASH_WALK: 0.03,        // 走路挤压幅度
+    STRETCH_RUN: 0.05,        // 奔跑拉伸幅度
+    STRETCH_WALK: 0.02        // 走路拉伸幅度
+  },
+  // 狗的配置
+  DOG: {
+    SCALE: 1.8,               // 狗的缩放
+    MOVE_SPEED: 400,          // 移动速度（基准像素/秒）
+    BARK_DURATION: 1200,      // 吠叫持续时间（毫秒）
+    BOUNCE_HEIGHT: 3,         // 待机弹跳高度
+    BOUNCE_HEIGHT_RUN: 12,    // 跑动弹跳高度
+    JUMP_HEIGHT: 16,          // 吠叫跳跃高度
+    BARK_BUBBLE_SCALE: 1.08,
+    SQUASH_RUN: 0.07,         // 跑动挤压幅度
+    STRETCH_RUN: 0.06,        // 跑动拉伸幅度
+    ROTATION_RUN: 0.03        // 跑动旋转幅度
+  },
+  // 背景配置
+  BACKGROUND: {
+    CLOUD_COUNT: 6,
+    CLOUD_MIN_SPEED: 8,
+    CLOUD_MAX_SPEED: 25,
+    CLOUD_MIN_SIZE: 50,
+    CLOUD_MAX_SIZE: 120,
+    FLOWER_COUNT: 30,
+    FLOWER_MIN_SIZE: 8,
+    FLOWER_MAX_SIZE: 16,
+    GRASS_COUNT: 100,
+    GRASS_MIN_HEIGHT: 10,
+    GRASS_MAX_HEIGHT: 24
+  },
+  // 太阳位置（基准坐标）
+  SUN: {
+    X: 1740,
+    Y: 140,
+    RADIUS: 56,
+    GLOW_RADIUS: 120
+  },
+  // 动画速率
+  ANIM_RATE: {
+    RUN: 12,
+    WALK: 5,
+    IDLE: 2
+  }
+};
+
+// ============================================
+// 音效映射表
+// ============================================
+var ANIMAL_SOUNDS = {
+  sheep: {
+    // 4种羊叫变体，随机播放
+    variants: [
+      'sheep.mp3',
+      'sheep_m.mp3',
+      'sheep_small.mp3',
+      'sheep_old.mp3'
+    ],
+    volume: 0.4
+  },
+  dog: {
+    bark: 'dog.mp3',
+    angry: 'dogangry.mp3',
+    volume: 0.6
+  },
+  bgm: {
+    file: 'audio_bgm_01_109s_434kb.mp3',
+    volume: 0.25,
+    loop: true
+  }
+};
+
+// ============================================
+// 基础设置与画布（全屏 Letterbox 模式）
+// ============================================
+var canvas = document.getElementById('gameCanvas');
+var ctx = canvas.getContext('2d');
+var DPR = window.devicePixelRatio || 1;
+var cssScale = 1;   // 基准坐标 → CSS像素 的缩放比例
+var offsetX = 0;    // 游戏区域在画布中的X偏移（CSS像素）
+var offsetY = 0;    // 游戏区域在画布中的Y偏移（CSS像素）
+
+/**
+ * 调整画布尺寸（全屏 Letterbox 模式）
+ * - Canvas 占满整个视口
+ * - 游戏画面等比缩放居中，四周留黑边
+ * - 所有绘制基于 1920×1080 基准坐标系
+ */
+function resizeCanvas() {
+  var viewW = window.innerWidth;
+  var viewH = window.innerHeight;
+
+  // 设置画布内部分辨率
+  canvas.width = viewW * DPR;
+  canvas.height = viewH * DPR;
+
+  // 计算等比缩放比例（contain模式）
+  cssScale = Math.min(viewW / BASE_W, viewH / BASE_H);
+
+  // 计算游戏区域在视口中的偏移（居中）
+  var gameCssW = BASE_W * cssScale;
+  var gameCssH = BASE_H * cssScale;
+  offsetX = (viewW - gameCssW) / 2;
+  offsetY = (viewH - gameCssH) / 2;
+
+  // 设置变换：先平移到游戏区域左上角，再缩放
+  ctx.setTransform(
+    cssScale * DPR, 0,
+    0, cssScale * DPR,
+    offsetX * DPR, offsetY * DPR
+  );
+}
+
+resizeCanvas();
+window.addEventListener('resize', function() {
+  DPR = window.devicePixelRatio || 1;
+  resizeCanvas();
+  initBackground();
+  updatePenBounds();
+});
+
+// 计算地面Y坐标（基准坐标）
+function getGroundY() {
+  return BASE_H * GAME_CONFIG.GROUND_RATIO;
+}
+
+// ============================================
+// 羊圈边界计算
+// ============================================
+var PEN_BOUNDS = {
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  openingTop: 0,
+  openingBottom: 0
+};
+
+/**
+ * 更新羊圈边界（地面变化时调用）
+ */
+function updatePenBounds() {
+  var penCfg = GAME_CONFIG.PEN;
+  var groundY = getGroundY();
+  PEN_BOUNDS.left = 10;
+  PEN_BOUNDS.right = BASE_W * penCfg.WIDTH_RATIO;
+  PEN_BOUNDS.top = groundY + penCfg.TOP_OFFSET;
+  PEN_BOUNDS.bottom = BASE_H - penCfg.BOTTOM_OFFSET;
+  var centerY = (PEN_BOUNDS.top + PEN_BOUNDS.bottom) / 2;
+  PEN_BOUNDS.openingTop = centerY - penCfg.OPENING_HEIGHT / 2;
+  PEN_BOUNDS.openingBottom = centerY + penCfg.OPENING_HEIGHT / 2;
+}
+
+/**
+ * 判断点是否在羊圈内部区域
+ * @param {number} x - 基准X坐标
+ * @param {number} y - 基准Y坐标
+ * @returns {boolean}
+ */
+function isInsidePen(x, y) {
+  return x > PEN_BOUNDS.left + 30 &&
+         x < PEN_BOUNDS.right - 10 &&
+         y > PEN_BOUNDS.top + 20 &&
+         y < PEN_BOUNDS.bottom - 20;
+}
+
+// ============================================
+// 资源路径
+// ============================================
+var ASSET_BASE = 'assets/animals/';
+var AUDIO_PATH = 'assets/audio/';
+
+// 羊的20种皮肤图片
+var SHEEP_IMAGES = [
+  'animal_084_114x139.png',
+  'animal_002_114x140.png',
+  'animal_012_114x140.png',
+  'animal_028_114x139.png',
+  'animal_032_114x138.png',
+  'animal_054_114x140.png',
+  'animal_059_114x138.png',
+  'animal_068_114x139.png',
+  'animal_081_114x140.png',
+  'animal_088_114x138.png',
+  'animal_089_114x139.png',
+  'animal_096_114x140.png',
+  'animal_100_114x140.png',
+  'animal_105_114x138.png',
+  'animal_109_114x140.png',
+  'animal_114_114x138.png',
+  'animal_119_114x139.png',
+  'animal_124_114x139.png',
+  'animal_127_114x139.png',
+  'animal_130_114x139.png'
+];
+
+// 狗的图片
+var DOG_IMAGE = 'animal_094_119x140.png';
+
+// ============================================
+// 音效系统
+// ============================================
+var sheepAudios = [];
+var dogBarkAudio = null;
+var dogAngryAudio = null;
+var bgmAudio = null;
+var bgmPlaying = false;
+
+/**
+ * 初始化所有音效
+ */
+function initAudio() {
+  var sheepVariants = ANIMAL_SOUNDS.sheep.variants;
+  for (var i = 0; i < sheepVariants.length; i++) {
+    var a = new Audio(AUDIO_PATH + sheepVariants[i]);
+    a.volume = ANIMAL_SOUNDS.sheep.volume;
+    sheepAudios.push(a);
+  }
+
+  dogBarkAudio = new Audio(AUDIO_PATH + ANIMAL_SOUNDS.dog.bark);
+  dogBarkAudio.volume = ANIMAL_SOUNDS.dog.volume;
+
+  dogAngryAudio = new Audio(AUDIO_PATH + ANIMAL_SOUNDS.dog.angry);
+  dogAngryAudio.volume = ANIMAL_SOUNDS.dog.volume;
+
+  bgmAudio = new Audio(AUDIO_PATH + ANIMAL_SOUNDS.bgm.file);
+  bgmAudio.loop = ANIMAL_SOUNDS.bgm.loop;
+  bgmAudio.volume = ANIMAL_SOUNDS.bgm.volume;
+}
+
+initAudio();
+
+/**
+ * 播放随机羊叫
+ */
+function playSheepSound() {
+  var idx = Math.floor(Math.random() * sheepAudios.length);
+  var audio = sheepAudios[idx];
+  audio.currentTime = 0;
+  audio.play().catch(function(){});
+}
+
+/**
+ * 播放狗叫
+ * @param {boolean} angry - 是否为愤怒吠叫
+ */
+function playDogBark(angry) {
+  var audio = angry ? dogAngryAudio : dogBarkAudio;
+  audio.currentTime = 0;
+  audio.play().catch(function(){});
+}
+
+/**
+ * 切换背景音乐
+ */
+function toggleBgm() {
+  if (bgmPlaying) {
+    bgmAudio.pause();
+    bgmPlaying = false;
+  } else {
+    bgmAudio.play().then(function() {
+      bgmPlaying = true;
+    }).catch(function() {
+      alert('请先点击页面以启用音频');
+    });
+  }
+}
+
+// ============================================
+// 图片预加载
+// ============================================
+var loadedImages = {};
+var loadCount = 0;
+var totalToLoad = SHEEP_IMAGES.length + 1;
+
+function loadImage(name, callback) {
+  var img = new Image();
+  img.onload = function() {
+    loadedImages[name] = img;
+    loadCount++;
+    if (loadCount >= totalToLoad) {
+      document.getElementById('loading').style.display = 'none';
+      callback();
+    }
+  };
+  img.onerror = function() {
+    console.error('图片加载失败: ' + name);
+    loadCount++;
+    if (loadCount >= totalToLoad) {
+      document.getElementById('loading').textContent = '部分图片加载失败';
+    }
+  };
+  img.src = ASSET_BASE + name;
+}
+
+function startGame() {
+  initGame();
+  requestAnimationFrame(gameLoop);
+}
+
+for (var i = 0; i < SHEEP_IMAGES.length; i++) {
+  loadImage(SHEEP_IMAGES[i], startGame);
+}
+loadImage(DOG_IMAGE, startGame);
+
+var gameStarted = false;
+var origStart = startGame;
+startGame = function() {
+  if (!gameStarted && loadCount >= totalToLoad) {
+    gameStarted = true;
+    origStart();
+  }
+};
+
+// ============================================
+// 背景绘制
+// ============================================
+var clouds = [];
+var flowers = [];
+var grassBlades = [];
+
+/**
+ * 初始化背景元素（云、花、草）
+ */
+function initBackground() {
+  var groundY = getGroundY();
+  var bgCfg = GAME_CONFIG.BACKGROUND;
+
+  // 云
+  clouds = [];
+  for (var i = 0; i < bgCfg.CLOUD_COUNT; i++) {
+    clouds.push({
+      x: Math.random() * BASE_W,
+      y: 40 + Math.random() * 140,
+      size: bgCfg.CLOUD_MIN_SIZE + Math.random() * (bgCfg.CLOUD_MAX_SIZE - bgCfg.CLOUD_MIN_SIZE),
+      speed: bgCfg.CLOUD_MIN_SPEED + Math.random() * (bgCfg.CLOUD_MAX_SPEED - bgCfg.CLOUD_MIN_SPEED)
+    });
+  }
+
+  // 花（避开羊圈区域）
+  flowers = [];
+  var flowerColors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF8E9E', '#CE93D8'];
+  var penRightX = BASE_W * GAME_CONFIG.PEN.WIDTH_RATIO;
+  for (var i = 0; i < bgCfg.FLOWER_COUNT; i++) {
+    var fx = penRightX + 50 + Math.random() * (BASE_W - penRightX - 100);
+    flowers.push({
+      x: fx,
+      y: groundY + 30 + Math.random() * (BASE_H - groundY - 60),
+      size: bgCfg.FLOWER_MIN_SIZE + Math.random() * (bgCfg.FLOWER_MAX_SIZE - bgCfg.FLOWER_MIN_SIZE),
+      color: flowerColors[Math.floor(Math.random() * 6)],
+      swayPhase: Math.random() * Math.PI * 2
+    });
+  }
+
+  // 草叶（避开羊圈区域）
+  grassBlades = [];
+  for (var i = 0; i < bgCfg.GRASS_COUNT; i++) {
+    var gx = penRightX + 30 + Math.random() * (BASE_W - penRightX - 60);
+    grassBlades.push({
+      x: gx,
+      y: groundY + 6 + Math.random() * (BASE_H - groundY - 30),
+      height: bgCfg.GRASS_MIN_HEIGHT + Math.random() * (bgCfg.GRASS_MAX_HEIGHT - bgCfg.GRASS_MIN_HEIGHT),
+      swayPhase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+/**
+ * 绘制背景
+ * @param {number} dt - 帧间隔（毫秒）
+ * @param {number} time - 当前时间（毫秒）
+ */
+function drawBackground(dt, time) {
+  var groundY = getGroundY();
+  var sunCfg = GAME_CONFIG.SUN;
+
+  // 天空渐变
+  var skyGrad = ctx.createLinearGradient(0, 0, 0, groundY + 40);
+  skyGrad.addColorStop(0, '#87CEEB');
+  skyGrad.addColorStop(0.6, '#B3E5FC');
+  skyGrad.addColorStop(1, '#C8E6C9');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, BASE_W, groundY + 40);
+
+  // 太阳光晕
+  var sunGlow = ctx.createRadialGradient(sunCfg.X, sunCfg.Y, sunCfg.RADIUS * 0.3, sunCfg.X, sunCfg.Y, sunCfg.GLOW_RADIUS);
+  sunGlow.addColorStop(0, 'rgba(255, 235, 59, 0.9)');
+  sunGlow.addColorStop(0.5, 'rgba(255, 235, 59, 0.3)');
+  sunGlow.addColorStop(1, 'rgba(255, 235, 59, 0)');
+  ctx.fillStyle = sunGlow;
+  ctx.fillRect(sunCfg.X - sunCfg.GLOW_RADIUS, sunCfg.Y - sunCfg.GLOW_RADIUS, sunCfg.GLOW_RADIUS * 2, sunCfg.GLOW_RADIUS * 2);
+
+  // 太阳本体
+  ctx.fillStyle = '#FFEB3B';
+  ctx.beginPath();
+  ctx.arc(sunCfg.X, sunCfg.Y, sunCfg.RADIUS, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 云（移动 + 绘制）
+  var dtSec = dt / 1000;
+  for (var i = 0; i < clouds.length; i++) {
+    var cloud = clouds[i];
+    cloud.x += cloud.speed * dtSec;
+    if (cloud.x > BASE_W + cloud.size) cloud.x = -cloud.size;
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.beginPath();
+    ctx.arc(cloud.x, cloud.y, cloud.size * 0.45, 0, Math.PI * 2);
+    ctx.arc(cloud.x + cloud.size * 0.35, cloud.y - cloud.size * 0.18, cloud.size * 0.38, 0, Math.PI * 2);
+    ctx.arc(cloud.x + cloud.size * 0.7, cloud.y, cloud.size * 0.4, 0, Math.PI * 2);
+    ctx.arc(cloud.x + cloud.size * 0.3, cloud.y + cloud.size * 0.1, cloud.size * 0.45, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // 远山
+  ctx.fillStyle = 'rgba(129, 199, 132, 0.5)';
+  ctx.beginPath();
+  ctx.moveTo(0, groundY);
+  ctx.bezierCurveTo(BASE_W * 0.15, groundY - 140, BASE_W * 0.3, groundY - 60, BASE_W * 0.45, groundY - 100);
+  ctx.bezierCurveTo(BASE_W * 0.6, groundY - 180, BASE_W * 0.75, groundY - 80, BASE_W, groundY - 30);
+  ctx.lineTo(BASE_W, groundY);
+  ctx.closePath();
+  ctx.fill();
+
+  // 草地渐变
+  var grassGrad = ctx.createLinearGradient(0, groundY, 0, BASE_H);
+  grassGrad.addColorStop(0, '#8BC34A');
+  grassGrad.addColorStop(0.4, '#7CB342');
+  grassGrad.addColorStop(1, '#558B2F');
+  ctx.fillStyle = grassGrad;
+  ctx.fillRect(0, groundY, BASE_W, BASE_H - groundY);
+
+  // 草叶
+  for (var i = 0; i < grassBlades.length; i++) {
+    var blade = grassBlades[i];
+    var sway = Math.sin(time * 0.002 + blade.swayPhase) * 3;
+    ctx.strokeStyle = '#689F38';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(blade.x, blade.y + blade.height);
+    ctx.quadraticCurveTo(blade.x + sway, blade.y + blade.height * 0.5, blade.x + sway * 1.5, blade.y);
+    ctx.stroke();
+  }
+
+  // 花
+  for (var i = 0; i < flowers.length; i++) {
+    var flower = flowers[i];
+    var sway = Math.sin(time * 0.002 + flower.swayPhase) * 2;
+    var fx = flower.x + sway;
+    var fy = flower.y;
+
+    // 花茎
+    ctx.strokeStyle = '#558B2F';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy + flower.size * 1.2);
+    ctx.lineTo(fx, fy);
+    ctx.stroke();
+
+    // 花瓣
+    ctx.fillStyle = flower.color;
+    for (var j = 0; j < 5; j++) {
+      var angle = (j / 5) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.ellipse(
+        fx + Math.cos(angle) * flower.size * 0.45,
+        fy + Math.sin(angle) * flower.size * 0.45,
+        flower.size * 0.35,
+        flower.size * 0.22,
+        angle,
+        0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+
+    // 花心
+    ctx.fillStyle = '#FFEB3B';
+    ctx.beginPath();
+    ctx.arc(fx, fy, flower.size * 0.22, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// ============================================
+// 羊圈绘制
+// ============================================
+
+/**
+ * 绘制羊圈（木栅栏 + 泥土地面）
+ */
+function drawPen() {
+  var penCfg = GAME_CONFIG.PEN;
+  var left = PEN_BOUNDS.left;
+  var right = PEN_BOUNDS.right;
+  var top = PEN_BOUNDS.top;
+  var bottom = PEN_BOUNDS.bottom;
+  var openingTop = PEN_BOUNDS.openingTop;
+  var openingBottom = PEN_BOUNDS.openingBottom;
+  var cornerRadius = 40;
+
+  // ===== 泥土地面（圆角矩形，带渐变）=====
+  ctx.save();
+  ctx.beginPath();
+  // 左上角圆弧
+  ctx.arc(left + cornerRadius, top + cornerRadius, cornerRadius, Math.PI, Math.PI * 1.5);
+  // 上边线
+  ctx.lineTo(right - cornerRadius, top);
+  // 右上角圆弧
+  ctx.arc(right - cornerRadius, top + cornerRadius, cornerRadius, Math.PI * 1.5, Math.PI * 2);
+  // 右边线上半段（到开口上沿）
+  ctx.lineTo(right, openingTop);
+  // 开口（跳过）
+  ctx.moveTo(right, openingBottom);
+  // 右边线下半段
+  ctx.lineTo(right, bottom - cornerRadius);
+  // 右下角圆弧
+  ctx.arc(right - cornerRadius, bottom - cornerRadius, cornerRadius, 0, Math.PI * 0.5);
+  // 下边线
+  ctx.lineTo(left + cornerRadius, bottom);
+  // 左下角圆弧
+  ctx.arc(left + cornerRadius, bottom - cornerRadius, cornerRadius, Math.PI * 0.5, Math.PI);
+  ctx.closePath();
+
+  // 泥土渐变
+  var dirtGrad = ctx.createLinearGradient(left, top, right, bottom);
+  dirtGrad.addColorStop(0, '#A0826D');
+  dirtGrad.addColorStop(0.5, '#8B7355');
+  dirtGrad.addColorStop(1, '#6B5344');
+  ctx.fillStyle = dirtGrad;
+  ctx.fill();
+
+  // 泥土纹理（小斑点）
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+  for (var dy = top + 20; dy < bottom - 20; dy += 30) {
+    for (var dx = left + 20; dx < right - 20; dx += 40) {
+      var spotX = dx + Math.sin(dy * 0.1) * 10;
+      var spotY = dy + Math.cos(dx * 0.1) * 8;
+      if (spotX > left + 15 && spotX < right - 15 &&
+          spotY > top + 15 && spotY < bottom - 15) {
+        ctx.beginPath();
+        ctx.arc(spotX, spotY, 2 + Math.random() * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+  ctx.restore();
+
+  // ===== 木栅栏 =====
+  var postRadius = penCfg.FENCE_POST_RADIUS;
+  var postSpacing = penCfg.FENCE_POST_SPACING;
+  var railCount = penCfg.FENCE_RAIL_COUNT;
+  var fenceColor = penCfg.FENCE_COLOR;
+  var fenceLight = penCfg.FENCE_LIGHT_COLOR;
+
+  ctx.save();
+
+  // 计算需要绘制木桩的位置
+  var postPositions = [];
+
+  // 顶部边（从左上圆角末端到右上圆角末端）
+  var topStartX = left + cornerRadius;
+  var topEndX = right - cornerRadius;
+  var topY = top;
+  for (var x = topStartX; x <= topEndX; x += postSpacing) {
+    postPositions.push({ x: x, y: topY });
+  }
+
+  // 底部边
+  var bottomY = bottom;
+  for (var x = topStartX; x <= topEndX; x += postSpacing) {
+    postPositions.push({ x: x, y: bottomY });
+  }
+
+  // 左边（圆角之间的直段）
+  var leftX = left;
+  var leftStartY = top + cornerRadius;
+  var leftEndY = bottom - cornerRadius;
+  for (var y = leftStartY; y <= leftEndY; y += postSpacing) {
+    postPositions.push({ x: leftX, y: y });
+  }
+
+  // 右边线上半段（开口上方）
+  var rightX = right;
+  for (var y = topY + cornerRadius; y <= openingTop - 5; y += postSpacing) {
+    postPositions.push({ x: rightX, y: y });
+  }
+
+  // 右边线下半段（开口下方）
+  for (var y = openingBottom + 5; y <= bottomY - cornerRadius; y += postSpacing) {
+    postPositions.push({ x: rightX, y: y });
+  }
+
+  // 开口两侧加两根明显的门柱
+  postPositions.push({ x: rightX, y: openingTop - 2, isGate: true });
+  postPositions.push({ x: rightX, y: openingBottom + 2, isGate: true });
+
+  // 绘制横向木条（连接木桩）
+  ctx.strokeStyle = fenceColor;
+  ctx.lineWidth = 6;
+  ctx.lineCap = 'round';
+
+  // 不同高度的横向木条
+  var railOffsets = [];
+  for (var r = 0; r < railCount; r++) {
+    railOffsets.push(-18 + r * 18); // 三条木条，上下分布
+  }
+
+  // 顶部横向木条
+  for (var r = 0; r < railCount; r++) {
+    var railY = topY + railOffsets[r];
+    ctx.beginPath();
+    ctx.moveTo(left + cornerRadius * 0.3, railY);
+    ctx.lineTo(right - cornerRadius * 0.3, railY);
+    ctx.stroke();
+  }
+
+  // 底部横向木条
+  for (var r = 0; r < railCount; r++) {
+    var railY = bottomY + railOffsets[r];
+    ctx.beginPath();
+    ctx.moveTo(left + cornerRadius * 0.3, railY);
+    ctx.lineTo(right - cornerRadius * 0.3, railY);
+    ctx.stroke();
+  }
+
+  // 左侧横向木条
+  for (var r = 0; r < railCount; r++) {
+    var railX = left + railOffsets[r] * 0.6;
+    ctx.beginPath();
+    ctx.moveTo(railX, top + cornerRadius * 0.3);
+    ctx.lineTo(railX, bottom - cornerRadius * 0.3);
+    ctx.stroke();
+  }
+
+  // 右侧上半段横向木条（开口上方）
+  for (var r = 0; r < railCount; r++) {
+    var railX = right - railOffsets[r] * 0.6;
+    ctx.beginPath();
+    ctx.moveTo(railX, top + cornerRadius * 0.3);
+    ctx.lineTo(railX, openingTop - 5);
+    ctx.stroke();
+  }
+
+  // 右侧下半段横向木条（开口下方）
+  for (var r = 0; r < railCount; r++) {
+    var railX = right - railOffsets[r] * 0.6;
+    ctx.beginPath();
+    ctx.moveTo(railX, openingBottom + 5);
+    ctx.lineTo(railX, bottom - cornerRadius * 0.3);
+    ctx.stroke();
+  }
+
+  // 绘制木桩
+  for (var i = 0; i < postPositions.length; i++) {
+    var post = postPositions[i];
+    var px = post.x;
+    var py = post.y;
+    var pRadius = post.isGate ? postRadius * 1.4 : postRadius;
+
+    // 木桩阴影
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.beginPath();
+    ctx.ellipse(px + 2, py + 3, pRadius, pRadius * 0.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 木桩本体（椭圆形，立体效果）
+    var postGrad = ctx.createRadialGradient(px - pRadius * 0.3, py - pRadius * 0.3, 1, px, py, pRadius);
+    postGrad.addColorStop(0, fenceLight);
+    postGrad.addColorStop(0.7, fenceColor);
+    postGrad.addColorStop(1, '#4A3118');
+    ctx.fillStyle = postGrad;
+    ctx.beginPath();
+    ctx.ellipse(px, py, pRadius, pRadius * 0.85, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 木桩顶部高光
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.beginPath();
+    ctx.ellipse(px - pRadius * 0.3, py - pRadius * 0.3, pRadius * 0.3, pRadius * 0.15, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+// ============================================
+// 羊类
+// ============================================
+var sheep = [];
+
+/**
+ * 羊构造函数
+ * @param {number} x - 基准X坐标
+ * @param {number} y - 基准Y坐标
+ * @param {string} imageName - 图片文件名
+ */
+function Sheep(x, y, imageName) {
+  this.x = x;
+  this.y = y;
+  this.baseY = y;
+  this.imageName = imageName;
+  this.img = loadedImages[imageName];
+  this.vx = 0;
+  this.vy = 0;
+  this.scale = GAME_CONFIG.SHEEP.MIN_SCALE + Math.random() * (GAME_CONFIG.SHEEP.MAX_SCALE - GAME_CONFIG.SHEEP.MIN_SCALE);
+  this.facing = Math.random() > 0.5 ? 1 : -1;
+  this.speed = GAME_CONFIG.SHEEP.WALK_SPEED * (0.8 + Math.random() * 0.4);
+  this.runSpeed = GAME_CONFIG.SHEEP.RUN_SPEED * (0.85 + Math.random() * 0.3);
+  this.state = 'idle';   // idle / walk / run / penned
+  this.stateTimer = 1000 + Math.random() * 2000;
+  this.isPenned = false; // 是否已入圈
+  this.soundCooldown = 0;
+  this.walkPhase = Math.random() * Math.PI * 2;
+  this.bobPhase = Math.random() * Math.PI * 2;
+  this.rotation = 0;
+  this.squash = 1;
+  this.stretch = 1;
+}
+
+/**
+ * 更新羊的状态
+ * @param {number} dt - 帧间隔（毫秒）
+ * @param {number} dogX - 狗的X坐标
+ * @param {number} dogY - 狗的Y坐标
+ */
+Sheep.prototype.update = function(dt, dogX, dogY) {
+  var sheepCfg = GAME_CONFIG.SHEEP;
+  var animCfg = GAME_CONFIG.ANIM_RATE;
+  var dtSec = dt / 1000;
+
+  this.soundCooldown = Math.max(0, this.soundCooldown - dt);
+
+  // ===== 已入圈状态：在圈内随机漫步 =====
+  if (this.isPenned) {
+    this.updatePenned(dt, dtSec);
+    this.updateAnimation(dt, animCfg, sheepCfg);
+    return;
+  }
+
+  // ===== 未入圈状态：检测狗的感知范围 =====
+  var dx = this.x - dogX;
+  var dy = this.y - dogY;
+  var dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < sheepCfg.PERCEPTION_RANGE) {
+    // 受惊奔跑：远离狗的方向
+    this.state = 'run';
+    var fleeX = dx / (dist || 1);
+    var fleeY = dy / (dist || 1);
+
+    // 加入一点随机偏移，让逃跑方向更自然
+    var randAngle = (Math.random() - 0.5) * 0.6;
+    var cos = Math.cos(randAngle);
+    var sin = Math.sin(randAngle);
+    var finalX = fleeX * cos - fleeY * sin;
+    var finalY = fleeX * sin + fleeY * cos;
+
+    this.vx = finalX * this.runSpeed;
+    this.vy = finalY * this.runSpeed * 0.7; // Y方向速度稍慢（透视效果）
+    this.facing = this.vx >= 0 ? 1 : -1;
+
+    // 随机发出叫声
+    if (Math.random() > 0.7 && this.soundCooldown <= 0) {
+      playSheepSound();
+      this.soundCooldown = sheepCfg.SOUND_COOLDOWN + Math.random() * sheepCfg.SOUND_RANDOM;
+    }
+  } else if (this.state === 'run') {
+    // 狗离开感知范围后，逐渐减速改为行走
+    this.vx *= 0.95;
+    this.vy *= 0.95;
+    if (Math.abs(this.vx) < this.speed && Math.abs(this.vy) < this.speed) {
+      this.state = 'walk';
+      this.stateTimer = 1500 + Math.random() * 2000;
+    }
+  } else {
+    // 自由状态：idle / walk 切换
+    this.stateTimer -= dt;
+    if (this.stateTimer <= 0) {
+      var r = Math.random();
+      if (r < sheepCfg.IDLE_CHANCE) {
+        this.state = 'idle';
+        this.stateTimer = 1200 + Math.random() * 2500;
+        this.vx = 0;
+        this.vy = 0;
+      } else {
+        this.state = 'walk';
+        this.stateTimer = 2000 + Math.random() * 3000;
+        var angle = Math.random() * Math.PI * 2;
+        this.vx = Math.cos(angle) * this.speed;
+        this.vy = Math.sin(angle) * this.speed * 0.6;
+        this.facing = this.vx >= 0 ? 1 : -1;
+      }
+    }
+  }
+
+  // 位置更新
+  this.x += this.vx * dtSec;
+  this.y += this.vy * dtSec;
+
+  // 边界碰撞（画面边界）
+  var margin = 50;
+  var groundY = getGroundY();
+  if (this.x < margin) {
+    this.x = margin;
+    this.vx = Math.abs(this.vx);
+    this.facing = 1;
+  }
+  if (this.x > BASE_W - margin) {
+    this.x = BASE_W - margin;
+    this.vx = -Math.abs(this.vx);
+    this.facing = -1;
+  }
+  if (this.y < groundY + 30) {
+    this.y = groundY + 30;
+    this.vy = Math.abs(this.vy);
+  }
+  if (this.y > BASE_H - 30) {
+    this.y = BASE_H - 30;
+    this.vy = -Math.abs(this.vy);
+  }
+  this.baseY = this.y;
+
+  // 检测是否进入羊圈
+  if (isInsidePen(this.x, this.y)) {
+    this.isPenned = true;
+    this.state = 'penned';
+    this.stateTimer = 1000 + Math.random() * 1500;
+    this.vx = 0;
+    this.vy = 0;
+    updateCounter();
+    // 入圈时叫一声
+    if (this.soundCooldown <= 0) {
+      playSheepSound();
+      this.soundCooldown = sheepCfg.SOUND_COOLDOWN;
+    }
+  }
+
+  // 更新动画
+  this.updateAnimation(dt, animCfg, sheepCfg);
+};
+
+/**
+ * 更新已入圈羊的状态（圈内漫步）
+ * @param {number} dt - 帧间隔
+ * @param {number} dtSec - 帧间隔（秒）
+ */
+Sheep.prototype.updatePenned = function(dt, dtSec) {
+  var sheepCfg = GAME_CONFIG.SHEEP;
+
+  this.stateTimer -= dt;
+  if (this.stateTimer <= 0) {
+    var r = Math.random();
+    if (r < 0.45) {
+      this.state = 'idle';
+      this.stateTimer = 1200 + Math.random() * 2000;
+      this.vx = 0;
+      this.vy = 0;
+    } else {
+      this.state = 'walk';
+      this.stateTimer = 1500 + Math.random() * 2500;
+      var angle = Math.random() * Math.PI * 2;
+      this.vx = Math.cos(angle) * this.speed * 0.8;
+      this.vy = Math.sin(angle) * this.speed * 0.5;
+      this.facing = this.vx >= 0 ? 1 : -1;
+    }
+  }
+
+  // 位置更新
+  this.x += this.vx * dtSec;
+  this.y += this.vy * dtSec;
+
+  // 羊圈边界约束（确保不会走出羊圈）
+  var margin = 35;
+  var newX = this.x;
+  var newY = this.y;
+
+  if (newX < PEN_BOUNDS.left + margin) {
+    newX = PEN_BOUNDS.left + margin;
+    this.vx = Math.abs(this.vx);
+    this.facing = 1;
+  }
+  if (newX > PEN_BOUNDS.right - margin) {
+    newX = PEN_BOUNDS.right - margin;
+    this.vx = -Math.abs(this.vx);
+    this.facing = -1;
+  }
+  if (newY < PEN_BOUNDS.top + margin) {
+    newY = PEN_BOUNDS.top + margin;
+    this.vy = Math.abs(this.vy);
+  }
+  if (newY > PEN_BOUNDS.bottom - margin) {
+    newY = PEN_BOUNDS.bottom - margin;
+    this.vy = -Math.abs(this.vy);
+  }
+
+  this.x = newX;
+  this.y = newY;
+  this.baseY = this.y;
+};
+
+/**
+ * 更新动画参数（挤压拉伸、弹跳、旋转）
+ * @param {number} dt - 帧间隔
+ * @param {object} animCfg - 动画速率配置
+ * @param {object} sheepCfg - 羊配置
+ */
+Sheep.prototype.updateAnimation = function(dt, animCfg, sheepCfg) {
+  var animRate;
+  if (this.state === 'run') {
+    animRate = animCfg.RUN;
+  } else if (this.state === 'walk' || this.state === 'penned') {
+    animRate = animCfg.WALK;
+  } else {
+    animRate = animCfg.IDLE;
+  }
+
+  this.walkPhase += animRate * dt * 0.01;
+  this.bobPhase += (animRate * 0.6) * dt * 0.01;
+
+  if (this.state === 'run') {
+    var phase = Math.sin(this.walkPhase);
+    this.squash = 1 + phase * sheepCfg.SQUASH_RUN;
+    this.stretch = 1 - phase * sheepCfg.STRETCH_RUN;
+    this.y = this.baseY + Math.sin(this.bobPhase) * sheepCfg.BOUNCE_HEIGHT;
+    this.rotation = Math.sin(this.walkPhase) * sheepCfg.ROTATION_RUN;
+  } else if (this.state === 'walk' || this.state === 'penned') {
+    var isMoving = Math.abs(this.vx) > 1 || Math.abs(this.vy) > 1;
+    if (isMoving) {
+      this.squash = 1 + Math.sin(this.walkPhase) * sheepCfg.SQUASH_WALK;
+      this.stretch = 1 - Math.sin(this.walkPhase) * sheepCfg.STRETCH_WALK;
+      this.y = this.baseY + Math.sin(this.bobPhase) * sheepCfg.BOUNCE_HEIGHT_WALK;
+      this.rotation = Math.sin(this.walkPhase) * sheepCfg.ROTATION_WALK;
+    } else {
+      this.squash = 1 + Math.sin(time * 0.003) * 0.015;
+      this.stretch = 1 - Math.sin(time * 0.003) * 0.01;
+      this.y = this.baseY + Math.sin(time * 0.002) * 1.5;
+      this.rotation = 0;
+    }
+  } else {
+    // idle 状态轻微呼吸
+    this.squash = 1 + Math.sin(time * 0.003) * 0.015;
+    this.stretch = 1 - Math.sin(time * 0.003) * 0.01;
+    this.y = this.baseY + Math.sin(time * 0.002) * 1.5;
+    this.rotation = 0;
+  }
+};
+
+/**
+ * 绘制羊
+ * @param {CanvasRenderingContext2D} ctx - 画布上下文
+ */
+Sheep.prototype.draw = function(ctx) {
+  if (!this.img) return;
+
+  var imgW = this.img.width * this.scale;
+  var imgH = this.img.height * this.scale;
+
+  ctx.save();
+  ctx.translate(this.x, this.y);
+  ctx.rotate(this.rotation);
+
+  // 阴影（随高度变化）
+  var shadowScale = 1 + (this.baseY - this.y) * 0.008;
+  var shadowAlpha = 0.2 - (this.baseY - this.y) * 0.0015;
+  ctx.fillStyle = 'rgba(0, 0, 0, ' + Math.max(0.08, shadowAlpha) + ')';
+  ctx.beginPath();
+  ctx.ellipse(0, imgH * 0.35, imgW * 0.35 * shadowScale, imgH * 0.06 * shadowScale, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 挤压拉伸 + 朝向翻转
+  ctx.scale(this.facing * this.stretch, this.squash);
+
+  // 绘制精灵
+  ctx.drawImage(
+    this.img,
+    -imgW / 2,
+    -imgH * 0.6,
+    imgW,
+    imgH
+  );
+
+  ctx.restore();
+
+  // 受惊感叹号
+  if (this.state === 'run' && !this.isPenned) {
+    ctx.save();
+    ctx.fillStyle = '#FF5722';
+    ctx.font = 'bold 40px sans-serif';
+    ctx.textAlign = 'center';
+    var bounce = Math.sin(time * 0.02) * 6;
+    ctx.fillText('!', this.x, this.y - this.img.height * this.scale * 0.5 + bounce);
+    ctx.restore();
+  }
+};
+
+/**
+ * 检测点击是否命中羊
+ * @param {number} px - 点击X（基准坐标）
+ * @param {number} py - 点击Y（基准坐标）
+ * @returns {boolean}
+ */
+Sheep.prototype.contains = function(px, py) {
+  var hitRadius = this.img ? this.img.width * this.scale * 0.4 : 60;
+  var dx = px - this.x;
+  var dy = py - (this.y - this.img.height * this.scale * 0.2);
+  return dx * dx + dy * dy < hitRadius * hitRadius;
+};
+
+// ============================================
+// 狗类
+// ============================================
+var dog = null;
+
+/**
+ * 狗构造函数
+ * @param {number} x - 基准X坐标
+ * @param {number} y - 基准Y坐标
+ */
+function Dog(x, y) {
+  this.x = x;
+  this.y = y;
+  this.baseY = y;
+  this.img = loadedImages[DOG_IMAGE];
+  this.scale = GAME_CONFIG.DOG.SCALE;
+  this.facing = -1;
+  this.barkTimer = 0;
+  this.bobPhase = 0;
+  this.walkPhase = 0;
+  this.isBarking = false;
+  this.isAngry = false;
+  // 移动相关
+  this.targetX = x;
+  this.targetY = y;
+  this.isMoving = false;
+  this.moveSpeed = GAME_CONFIG.DOG.MOVE_SPEED;
+  this.squash = 1;
+  this.stretch = 1;
+  this.rotation = 0;
+}
+
+/**
+ * 移动狗到指定位置
+ * @param {number} x - 目标X（基准坐标）
+ * @param {number} y - 目标Y（基准坐标）
+ */
+Dog.prototype.moveTo = function(x, y) {
+  this.targetX = x;
+  this.targetY = y;
+  this.isMoving = true;
+};
+
+/**
+ * 更新狗的状态
+ * @param {number} dt - 帧间隔（毫秒）
+ */
+Dog.prototype.update = function(dt) {
+  var dogCfg = GAME_CONFIG.DOG;
+  var dtSec = dt / 1000;
+
+  // 吠叫计时
+  if (this.barkTimer > 0) {
+    this.barkTimer -= dt;
+    this.isBarking = this.barkTimer > 0;
+  } else {
+    this.isBarking = false;
+    this.isAngry = false;
+  }
+
+  // 移动逻辑
+  if (this.isMoving) {
+    var dx = this.targetX - this.x;
+    var dy = this.targetY - this.y;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 5) {
+      // 到达目标
+      this.x = this.targetX;
+      this.y = this.targetY;
+      this.baseY = this.targetY;
+      this.isMoving = false;
+      this.vx = 0;
+      this.vy = 0;
+    } else {
+      // 向目标移动
+      var moveX = (dx / dist) * this.moveSpeed * dtSec;
+      var moveY = (dy / dist) * this.moveSpeed * dtSec * 0.7; // Y方向稍慢
+
+      this.x += moveX;
+      this.y += moveY;
+      this.baseY = this.y;
+      this.facing = dx >= 0 ? 1 : -1;
+    }
+  }
+
+  // 动画更新
+  if (this.isMoving) {
+    // 跑动动画
+    var animRate = GAME_CONFIG.ANIM_RATE.RUN;
+    this.walkPhase += animRate * dt * 0.01;
+    this.bobPhase += (animRate * 0.6) * dt * 0.01;
+
+    var phase = Math.sin(this.walkPhase);
+    this.squash = 1 + phase * dogCfg.SQUASH_RUN;
+    this.stretch = 1 - phase * dogCfg.STRETCH_RUN;
+    this.y = this.baseY + Math.sin(this.bobPhase) * dogCfg.BOUNCE_HEIGHT_RUN;
+    this.rotation = Math.sin(this.walkPhase) * dogCfg.ROTATION_RUN;
+  } else {
+    // 待机动画
+    this.bobPhase += 1.5 * dt * 0.01;
+    this.y = this.baseY + Math.sin(this.bobPhase) * dogCfg.BOUNCE_HEIGHT;
+    this.squash = 1 + Math.sin(time * 0.003) * 0.01;
+    this.stretch = 1 - Math.sin(time * 0.003) * 0.008;
+    this.rotation = 0;
+  }
+};
+
+/**
+ * 狗吠叫
+ * @param {boolean} angry - 是否为愤怒吠叫
+ */
+Dog.prototype.bark = function(angry) {
+  var dogCfg = GAME_CONFIG.DOG;
+  if (this.barkTimer <= 0) {
+    this.barkTimer = dogCfg.BARK_DURATION;
+    this.isAngry = angry;
+    playDogBark(angry);
+    var self = this;
+    var origY = this.baseY;
+    this.y = origY - dogCfg.JUMP_HEIGHT;
+    setTimeout(function() {
+      self.y = origY;
+    }, 150);
+  }
+};
+
+/**
+ * 绘制狗
+ * @param {CanvasRenderingContext2D} ctx - 画布上下文
+ */
+Dog.prototype.draw = function(ctx) {
+  if (!this.img) return;
+
+  var imgW = this.img.width * this.scale;
+  var imgH = this.img.height * this.scale;
+
+  ctx.save();
+  ctx.translate(this.x, this.y);
+  ctx.rotate(this.rotation);
+
+  // 阴影（随高度变化）
+  var shadowScale = 1 + (this.baseY - this.y) * 0.008;
+  var shadowAlpha = 0.25 - (this.baseY - this.y) * 0.0015;
+  ctx.fillStyle = 'rgba(0, 0, 0, ' + Math.max(0.1, shadowAlpha) + ')';
+  ctx.beginPath();
+  ctx.ellipse(0, imgH * 0.3, imgW * 0.38 * shadowScale, imgH * 0.07 * shadowScale, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 吠叫时放大效果 + 挤压拉伸 + 朝向翻转
+  var barkScale = this.isBarking ? GAME_CONFIG.DOG.BARK_BUBBLE_SCALE + Math.sin(this.barkTimer * 0.02) * 0.03 : 1;
+  var totalScaleX = this.facing * this.stretch * barkScale;
+  var totalScaleY = this.squash * barkScale;
+
+  ctx.scale(totalScaleX, totalScaleY);
+
+  // 绘制精灵
+  ctx.drawImage(
+    this.img,
+    -imgW / 2,
+    -imgH * 0.55,
+    imgW,
+    imgH
+  );
+
+  ctx.restore();
+
+  // 吠叫对话框
+  if (this.isBarking && this.barkTimer > 200) {
+    ctx.save();
+    var bubbleX = this.x + this.facing * 50;
+    var bubbleY = this.y - this.img.height * this.scale * 0.65;
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
+    ctx.strokeStyle = '#E0E0E0';
+    ctx.lineWidth = 3;
+
+    var bubbleW = 160;
+    var bubbleH = 72;
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(bubbleX - bubbleW / 2, bubbleY - bubbleH / 2, bubbleW, bubbleH, 36);
+      ctx.fill();
+      ctx.stroke();
+    } else {
+      ctx.fillRect(bubbleX - bubbleW / 2, bubbleY - bubbleH / 2, bubbleW, bubbleH);
+      ctx.strokeRect(bubbleX - bubbleW / 2, bubbleY - bubbleH / 2, bubbleW, bubbleH);
+    }
+
+    ctx.fillStyle = this.isAngry ? '#D32F2F' : '#FF5722';
+    ctx.font = 'bold 32px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(this.isAngry ? '汪汪汪！' : '汪汪！', bubbleX, bubbleY + 10);
+
+    ctx.restore();
+  }
+};
+
+/**
+ * 检测点击是否命中狗
+ * @param {number} px - 点击X（基准坐标）
+ * @param {number} py - 点击Y（基准坐标）
+ * @returns {boolean}
+ */
+Dog.prototype.contains = function(px, py) {
+  var hitRadius = this.img ? this.img.width * this.scale * 0.45 : 80;
+  var dx = px - this.x;
+  var dy = py - (this.y - this.img.height * this.scale * 0.2);
+  return dx * dx + dy * dy < hitRadius * hitRadius;
+};
+
+// ============================================
+// 游戏初始化
+// ============================================
+
+/**
+ * 初始化游戏
+ */
+function initGame() {
+  var groundY = getGroundY();
+  var sheepCfg = GAME_CONFIG.SHEEP;
+
+  updatePenBounds();
+  initBackground();
+
+  // 创建初始羊群（分布在右侧草地上）
+  sheep = [];
+  var sheepCount = sheepCfg.INITIAL_COUNT;
+  var penRightX = BASE_W * GAME_CONFIG.PEN.WIDTH_RATIO;
+
+  for (var i = 0; i < sheepCount; i++) {
+    var sx = penRightX + 150 + (i / sheepCount) * (BASE_W - penRightX - 300) + (Math.random() - 0.5) * 120;
+    var sy = groundY + 60 + Math.random() * (BASE_H - groundY - 160);
+    var imgName = SHEEP_IMAGES[i % SHEEP_IMAGES.length];
+    sheep.push(new Sheep(sx, sy, imgName));
+  }
+
+  // 创建狗（初始在中间偏右位置）
+  dog = new Dog(BASE_W * 0.6, groundY + 80);
+
+  // 重置UI
+  updateCounter();
+  document.getElementById('winBanner').style.display = 'none';
+}
+
+/**
+ * 重新开始游戏
+ */
+function restartGame() {
+  initGame();
+}
+
+/**
+ * 更新入圈计数器
+ */
+function updateCounter() {
+  var pennedCount = 0;
+  for (var i = 0; i < sheep.length; i++) {
+    if (sheep[i].isPenned) pennedCount++;
+  }
+  document.getElementById('counter').textContent = pennedCount + ' / ' + sheep.length;
+
+  // 检测是否全部入圈
+  if (pennedCount === sheep.length && sheep.length > 0) {
+    document.getElementById('winBanner').style.display = 'block';
+  } else {
+    document.getElementById('winBanner').style.display = 'none';
+  }
+}
+
+// ============================================
+// 交互处理
+// ============================================
+
+/**
+ * 将客户端坐标转换为基准坐标
+ * @param {MouseEvent} e - 鼠标事件
+ * @returns {{x: number, y: number}}
+ */
+function getCanvasCoords(e) {
+  var x = (e.clientX - offsetX) / cssScale;
+  var y = (e.clientY - offsetY) / cssScale;
+  return { x: x, y: y };
+}
+
+// 点击事件
+canvas.addEventListener('click', function(e) {
+  var pos = getCanvasCoords(e);
+  var x = pos.x;
+  var y = pos.y;
+
+  // 边界检查：点击在游戏区域外则忽略
+  if (x < 0 || x > BASE_W || y < 0 || y > BASE_H) return;
+
+  // 点击狗本身 → 狗叫
+  if (dog && dog.contains(x, y)) {
+    dog.bark(false);
+    return;
+  }
+
+  // 点击地面 → 狗移动到该位置
+  var groundY = getGroundY();
+  if (y > groundY + 20 && y < BASE_H - 20) {
+    // 限制移动范围在地面区域
+    var targetY = Math.max(groundY + 20, Math.min(BASE_H - 20, y));
+    var targetX = Math.max(30, Math.min(BASE_W - 30, x));
+    dog.moveTo(targetX, targetY);
+  }
+});
+
+/**
+ * 添加一只羊
+ */
+function addSheep() {
+  var groundY = getGroundY();
+  var penRightX = BASE_W * GAME_CONFIG.PEN.WIDTH_RATIO;
+  var sx = penRightX + 100 + Math.random() * (BASE_W - penRightX - 200);
+  var sy = groundY + 60 + Math.random() * (BASE_H - groundY - 160);
+  var imgName = SHEEP_IMAGES[Math.floor(Math.random() * SHEEP_IMAGES.length)];
+  sheep.push(new Sheep(sx, sy, imgName));
+  updateCounter();
+}
+
+// ============================================
+// 游戏主循环
+// ============================================
+var lastTime = 0;
+var time = 0;
+
+/**
+ * 游戏主循环
+ * @param {number} t - 时间戳（毫秒）
+ */
+function gameLoop(t) {
+  var dt = Math.min(t - lastTime, 50);
+  lastTime = t;
+  time = t;
+
+  // 清空整个画布（包括 letterbox 区域，填黑色）
+  ctx.save();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0, 0, canvas.width / DPR, canvas.height / DPR);
+  ctx.restore();
+
+  // 恢复游戏变换
+  ctx.setTransform(
+    cssScale * DPR, 0,
+    0, cssScale * DPR,
+    offsetX * DPR, offsetY * DPR
+  );
+
+  // 清空游戏区域（用天空色打底）
+  ctx.clearRect(0, 0, BASE_W, BASE_H);
+
+  // 绘制背景
+  drawBackground(dt, t);
+
+  // 绘制羊圈（地面层级）
+  drawPen();
+
+  // 更新狗
+  if (dog) {
+    dog.update(dt);
+  }
+
+  // 更新羊
+  for (var i = 0; i < sheep.length; i++) {
+    sheep[i].update(dt, dog ? dog.x : BASE_W / 2, dog ? dog.y : 0);
+  }
+
+  // Y排序（深度排序：Y越大越靠前，后绘制）
+  var allEntities = sheep.slice();
+  if (dog) allEntities.push(dog);
+  allEntities.sort(function(a, b) { return a.y - b.y; });
+
+  // 绘制所有实体
+  for (var i = 0; i < allEntities.length; i++) {
+    allEntities[i].draw(ctx);
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+// ============================================
+// Polyfill: roundRect
+// ============================================
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+    return this;
+  };
+}
+</script>
+</body>
+</html>
