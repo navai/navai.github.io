@@ -401,7 +401,7 @@
           <div class="section-header">
             <div class="icon-circle" style="background: rgba(245,158,11,0.15); color: #D97706;"><i class="fa-solid fa-graduation-cap"></i></div>
             <span class="section-title-inline" style="color: #92400E;">系统分析师高级 · 2026下半年备考</span>
-            <span style="margin-left:auto; background:#F59E0B; color:#fff; font-size:11px; font-weight:600; padding:3px 10px; border-radius:10px;">倒计时 92 天</span>
+            <span style="margin-left:auto; background:#F59E0B; color:#fff; font-size:11px; font-weight:600; padding:3px 10px; border-radius:10px;" id="saCountdown">倒计时 -- 天</span>
           </div>
           <div class="section-header-divider" style="background: rgba(245,158,11,0.2);"></div>
 
@@ -2939,6 +2939,23 @@
 
     // Footer year
     document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+    // ===== 系统分析师倒计时 =====
+    function updateSaCountdown() {
+      const examDate = new Date('2026-10-24T08:30:00+08:00');
+      const now = new Date();
+      const diff = examDate - now;
+      const el = document.getElementById('saCountdown');
+      if (!el) return;
+      if (diff <= 0) {
+        el.textContent = '考试进行中';
+        return;
+      }
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      el.textContent = '倒计时 ' + days + ' 天';
+    }
+    updateSaCountdown();
+    setInterval(updateSaCountdown, 60000);
 
     // Back to top
     const btn = document.getElementById('backToTop');
