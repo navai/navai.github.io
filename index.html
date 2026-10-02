@@ -4,24 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NavAI 导航</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="skin/css/colors_and_type.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          colors: {
-            brand: { primary: 'var(--brand-primary)', bg: 'var(--brand-bg)', text: 'var(--brand-text)', muted: 'var(--brand-text-muted)' },
-            study: 'var(--cat-study)', dev: 'var(--cat-dev)', tool: 'var(--cat-tool)',
-            fun: 'var(--cat-fun)', read: 'var(--cat-read)', design: 'var(--cat-design)', life: 'var(--cat-life)',
-          }
-        }
-      }
+  <style>
+    /* ===== 自包含工具类（替代 Tailwind Play CDN，避免国内无法访问导致样式错乱） ===== */
+    .grid { display: grid; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .gap-2 { gap: 0.5rem; }
+    .block { display: block; }
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-\[10px\] { font-size: 10px; }
+    .font-semibold { font-weight: 600; }
+    .text-white { color: #ffffff; }
+    .min-h-screen { min-height: 100vh; }
+    .mr-1 { margin-right: 0.25rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    @media (min-width: 640px) {
+      .sm\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sm\:px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
     }
-  </script>
+    @media (min-width: 768px) {
+      .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+      .lg\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+      .lg\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+    @media (min-width: 1280px) {
+      .xl\:grid-cols-7 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+    }
+  </style>
   <style>
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-sans); background: var(--brand-bg); color: var(--brand-text); margin: 0; }
