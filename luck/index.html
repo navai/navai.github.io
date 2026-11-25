@@ -213,14 +213,15 @@
         canvas.width = document.body.offsetWidth;
         canvas.height = document.body.offsetHeight;
         document.getElementById('main').appendChild(canvas);
-        new Vue({
-            el: '#tools',
-            data: {
-                selected: 30,
-                running: false,
-                btns: [
-                    30, 10, 5, 2, 1
-                ]
+        Vue.createApp({
+            data() {
+                return {
+                    selected: 30,
+                    running: false,
+                    btns: [
+                        30, 10, 5, 2, 1
+                    ]
+                };
             },
             mounted () {
                 canvas.innerHTML = createHTML();
@@ -265,7 +266,7 @@
                     this.running = !this.running;
                 }
             }
-        });
+        }).mount('#tools');
     })();
 </script>
 </body>

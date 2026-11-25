@@ -57,10 +57,11 @@
 </div>
 <script type="text/javascript" src="js/vue.js"></script>
 <script type="text/javascript">
-    new Vue({
-        el: '#main',
-        data: {
-            results: []
+    Vue.createApp({
+        data() {
+            return {
+                results: []
+            };
         },
         mounted () {
             let vm = this
@@ -84,7 +85,7 @@
             results = results.sort((x, y) => { return x.length - y.length;})
             this.results = results
         },
-    })
+    }).mount('#main')
 </script>
 </body>
 </html>
