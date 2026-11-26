@@ -333,6 +333,11 @@
     </div>
 
     <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#cat-edu" class="sidebar-nav-item" data-section="cat-edu" data-color="#A78BFA">
+        <span class="nav-dot" style="background:#A78BFA;"></span>
+        <i class="fa-solid fa-graduation-cap nav-icon" style="color:#A78BFA;"></i>
+        <span class="nav-text">继续教育</span>
+      </a>
       <a href="#cat-opensource" class="sidebar-nav-item" data-section="cat-opensource" data-color="#60A5FA">
         <span class="nav-dot" style="background:#60A5FA;"></span>
         <i class="fa-brands fa-github nav-icon" style="color:#60A5FA;"></i>
@@ -347,11 +352,6 @@
         <span class="nav-dot" style="background:#8B5CF6;"></span>
         <i class="fa-solid fa-certificate nav-icon" style="color:#8B5CF6;"></i>
         <span class="nav-text">高项备考</span>
-      </a>
-      <a href="#cat-edu" class="sidebar-nav-item" data-section="cat-edu" data-color="#A78BFA">
-        <span class="nav-dot" style="background:#A78BFA;"></span>
-        <i class="fa-solid fa-graduation-cap nav-icon" style="color:#A78BFA;"></i>
-        <span class="nav-text">继续教育</span>
       </a>
       <a href="#cat-dev" class="sidebar-nav-item" data-section="cat-dev" data-color="#3B82F6">
         <span class="nav-dot" style="background:#3B82F6;"></span>
@@ -417,6 +417,78 @@
     </div>
 
     <main class="main-content px-3 sm:px-5 lg:px-6 py-4" style="max-width: 1400px;">
+
+<!-- ==================== 1. 继续教育 ==================== -->
+      <section id="cat-edu" class="cat-section cat-study">
+        <div class="section-container-card" style="border-top-color: #A78BFA">
+          <div class="section-header">
+            <div class="icon-circle"><i class="fa-solid fa-graduation-cap"></i></div>
+            <span class="section-title-inline">继续教育</span>
+          </div>
+          <div class="section-header-divider"></div>
+
+          <!-- 每日看课进度 - 独立卡片 -->
+          <div style="margin-bottom:12px;">
+            <a href="https://navai.github.io/01-P1每日看课进度表.html" target="_blank" class="link-card" style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-color:#A78BFA; background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%); text-decoration:none;">
+              <div style="width:40px; height:40px; border-radius:10px; background:#A78BFA; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px;">
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:#5B21B6;">P1 每日看课进度表</div>
+                <div style="font-size:11.5px; color:#6D28D9; margin-top:2px;">教资 · 72集 · 2026.11.24 – 2027.2.7 · 每日打卡</div>
+              </div>
+              <i class="fa-solid fa-arrow-right" style="color:#7C3AED; font-size:12px;"></i>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2">
+
+          <div class="link-card">
+            <a href="https://www.pmi.org/" target="_blank" class="block text-xs font-semibold">PMI</a>
+            <div class="sub-tag">项目管理</div>
+          </div>
+
+          <div class="link-card">
+            <a href="https://learning.pmichina.org/" target="_blank" class="block text-xs font-semibold">PMI PDU</a>
+            <div class="sub-tag">PDU学分</div>
+          </div>
+
+          <div class="link-card">
+            <a href="http://event.chinapmp.cn/" target="_blank" class="block text-xs font-semibold">PMI基金会</a>
+            <div class="sub-tag">活动</div>
+          </div>
+
+          <div class="link-card">
+            <a href="https://www.educity.cn/" target="_blank" class="block text-xs font-semibold">希赛</a>
+            <div class="sub-tag">继续教育</div>
+          </div>
+
+          <div class="link-card">
+            <a href="http://czt.shandong.gov.cn/col/col17084/index.html" target="_blank" class="block text-xs font-semibold">会计继续教育</a>
+            <div class="sub-tag">山东</div>
+          </div>
+
+          <div class="link-card">
+            <a href="https://kaoyan.eol.cn/e_ky/zt/common/zhenti/" target="_blank" class="block text-xs font-semibold">考研真题</a>
+            <div class="sub-tag">历年真题</div>
+          </div>
+
+          <div class="link-card">
+            <a href="https://nav.guidebook.top/english" target="_blank" class="block text-xs font-semibold">英语学习</a>
+            <div class="sub-tag">英语</div>
+          </div>
+
+          <div class="link-card">
+            <a href="https://space.bilibili.com/697812672" target="_blank" class="block text-xs font-semibold">AE + Pr</a>
+            <div class="sub-tag">视频后期</div>
+          </div>
+
+          <div class="link-card" style="border-color: #F59E0B; background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);">
+            <a href="https://typewords.cc" target="_blank" class="block text-xs font-semibold" style="color: #B45309;">兴趣英语</a>
+            <div class="sub-tag"><a href="https://github.com/zyronon/TypeWords" target="_blank" style="color: #92400E;">开源</a></div>
+          </div>
+        </div>
+      </section>
 
 <!-- ==================== 5. 开源发现 ==================== -->
       <section id="cat-opensource" class="cat-section cat-dev">
@@ -867,78 +939,6 @@
                 </a>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-<!-- ==================== 3. 继续教育 ==================== -->
-      <section id="cat-edu" class="cat-section cat-study">
-        <div class="section-container-card" style="border-top-color: #A78BFA">
-          <div class="section-header">
-            <div class="icon-circle"><i class="fa-solid fa-graduation-cap"></i></div>
-            <span class="section-title-inline">继续教育</span>
-          </div>
-          <div class="section-header-divider"></div>
-
-          <!-- 每日看课进度 - 独立卡片 -->
-          <div style="margin-bottom:12px;">
-            <a href="https://navai.github.io/01-P1每日看课进度表.html" target="_blank" class="link-card" style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-color:#A78BFA; background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%); text-decoration:none;">
-              <div style="width:40px; height:40px; border-radius:10px; background:#A78BFA; color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px;">
-                <i class="fa-solid fa-list-check"></i>
-              </div>
-              <div style="flex:1; min-width:0;">
-                <div style="font-size:14px; font-weight:600; color:#5B21B6;">P1 每日看课进度表</div>
-                <div style="font-size:11.5px; color:#6D28D9; margin-top:2px;">教资 · 72集 · 2026.11.24 – 2027.2.7 · 每日打卡</div>
-              </div>
-              <i class="fa-solid fa-arrow-right" style="color:#7C3AED; font-size:12px;"></i>
-            </a>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-2">
-
-          <div class="link-card">
-            <a href="https://www.pmi.org/" target="_blank" class="block text-xs font-semibold">PMI</a>
-            <div class="sub-tag">项目管理</div>
-          </div>
-
-          <div class="link-card">
-            <a href="https://learning.pmichina.org/" target="_blank" class="block text-xs font-semibold">PMI PDU</a>
-            <div class="sub-tag">PDU学分</div>
-          </div>
-
-          <div class="link-card">
-            <a href="http://event.chinapmp.cn/" target="_blank" class="block text-xs font-semibold">PMI基金会</a>
-            <div class="sub-tag">活动</div>
-          </div>
-
-          <div class="link-card">
-            <a href="https://www.educity.cn/" target="_blank" class="block text-xs font-semibold">希赛</a>
-            <div class="sub-tag">继续教育</div>
-          </div>
-
-          <div class="link-card">
-            <a href="http://czt.shandong.gov.cn/col/col17084/index.html" target="_blank" class="block text-xs font-semibold">会计继续教育</a>
-            <div class="sub-tag">山东</div>
-          </div>
-
-          <div class="link-card">
-            <a href="https://kaoyan.eol.cn/e_ky/zt/common/zhenti/" target="_blank" class="block text-xs font-semibold">考研真题</a>
-            <div class="sub-tag">历年真题</div>
-          </div>
-
-          <div class="link-card">
-            <a href="https://nav.guidebook.top/english" target="_blank" class="block text-xs font-semibold">英语学习</a>
-            <div class="sub-tag">英语</div>
-          </div>
-
-          <div class="link-card">
-            <a href="https://space.bilibili.com/697812672" target="_blank" class="block text-xs font-semibold">AE + Pr</a>
-            <div class="sub-tag">视频后期</div>
-          </div>
-
-          <div class="link-card" style="border-color: #F59E0B; background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);">
-            <a href="https://typewords.cc" target="_blank" class="block text-xs font-semibold" style="color: #B45309;">兴趣英语</a>
-            <div class="sub-tag"><a href="https://github.com/zyronon/TypeWords" target="_blank" style="color: #92400E;">开源</a></div>
           </div>
         </div>
       </section>
